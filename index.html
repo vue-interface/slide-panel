@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>SlidePanel</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./dist/SlidePanel.css">
+        <style>
+            .slide-panel-container {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100%;
+                display: flex;
+                flex-direction: row-reverse;
+                max-width: 55%;
+            }
+            .slide-panel-container .slide-panel {
+                height: 100%;
+                right: 0;
+                flex-grow: 0;
+            }
+            .slide-panel-container .slide-panel:not(:last-child) {
+                position: absolute;
+                left: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app" class="container">
+            <h1 class="mb-5">slide-panel</h1>
+
+            <h3>Basic Usage</h3>
+
+            <button class="btn btn-primary" @click="() => $refs.slide1.toggle()">Slide 1</button>
+            <button class="btn btn-primary" @click="() => $refs.slide2.toggle()">Slide 2</button>
+            <button class="btn btn-primary" @click="() => $refs.slide3.toggle()">Slide 3</button>
+            <button class="btn btn-primary" @click="() => $refs.slide4.toggle()">Slide 4</button>
+
+            <slide-deck>
+                <slide-panel ref="slide1" show>
+                    <div>
+                        <h2>Slide 1</h2>
+                        <p>test</p>
+                    </div>
+                </slide-panel>
+
+                <slide-panel ref="slide2" :cancel="cancel">
+                    <div>
+                        <h2>Slide 2</h2>
+                        <p>test</p>
+                    </div>
+                </slide-panel>
+
+                <slide-panel ref="slide4" :cancel="cancel" @cancel="onCancel">
+                    <div>
+                        <h2>Slide 4</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">First</label>
+                            <input class="form-control"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Last</label>
+                            <input class="form-control"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input class="form-control"/>
+                        </div>
+                        
+                    </div>
+                </slide-panel>
+
+                <slide-panel ref="slide3">
+                    <div>
+                        <h2>Slide 3</h2>
+                        <p>test</p>
+                    </div>
+                </slide-panel>
+            </slide-deck>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+        <script type="text/javascript" src="./dist/SlidePanel.umd.js"></script>
+        <script type="text/javascript">
+            const { SlideDeck, SlidePanel } = window.SlidePanel;
+
+            const vue = new Vue({
+                el: '#app',
+                components: {
+                    SlideDeck,
+                    SlidePanel
+                },
+                methods: {
+                    onCancel() {
+                        console.log('cancel successful');
+                    },
+                    cancel(vue) {
+                        return new Promise((resolve, reject) => {
+                            if(confirm('Are you sure you want to cancel?')) {
+                                vue.close(resolve);
+                            }
+                            else {
+                                reject(new Error('User cancelled the close!'));
+                            }
+                        });
+                    }
+                },
+                data() {
+                    return {
+                        value: null,
+                        showActivity: false
+                    };
+                }
+            });
+        </script>
+    </body>
+</html>
