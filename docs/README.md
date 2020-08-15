@@ -14,4 +14,4 @@ Yarn
 
 CDN
 
-    https://cdn.jsdelivr.net/npm/<%= pgk.name %>@<%= pkg.version %>/dist/InputField.min.js
+    https://cdn.jsdelivr.net/npm/<%= pgk.name %>@<%= pkg.version %>/dist/SlidePanel.min.js
