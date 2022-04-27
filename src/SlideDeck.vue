@@ -5,21 +5,18 @@
 </template>
 
 <script>
-import { prefix, unit } from '@vue-interface/utils';
+function unit(value, uom = 'px') {
+    return value !== null
+        && value !== undefined
+        && value !== false
+        && isFinite(value) ? `${value}${uom}` : value;
+}
 
 export default {
     props: {
         align: {
             type: String,
-            default: 'right',
-            validate(value) {
-                return [
-                    'slide-top',
-                    'slide-bottom',
-                    'slide-left',
-                    'slide-right'
-                ].indexOf(prefix(value, 'slide')) > -1;
-            }
+            default: 'right'
         },
         minWidth: [Number, String],
         maxWidth: [Number, String],

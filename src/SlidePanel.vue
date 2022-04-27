@@ -1,30 +1,36 @@
 <template>
     <div class="slide-panel"
-        :class="classes"
-        :style="styles()"
+        :style="{ 
+            zIndex,
+            display: isDisplaying ? 'flex' : 'none'
+        }"
         @mouseenter.self="onMouseenter"
         @mouseleave.self="onMouseleave"
         @keydown.esc="onEsc">
-        <animate-css name="slide" :duration="duration" right>
-            <div v-if="isShowing" class="slide-panel-content" @click="onClick">
+        <transition
+            name="slide"
+            @after-enter="onAfterEnter"
+            @after-leave="onAfterLeave">
+            <div
+                v-if="isShowing"
+                class="slide-panel-content"
+                :class="{show: isShowing}"
+                :style="{transitionDuration: duration}"
+                @click="onClick">
                 <div class="slide-panel-content-inner">
                     <slot />
                 </div>
                 <div>
-                    <a href="#" class="slide-panel-close" @click.prevent="onCancel">
+                    <a href="#" class="slide-panel-close" @click.prevent="onClickCancel">
                         <span>&times;</span>
                     </a>
                 </div>
             </div>
-        </animate-css>
+        </transition>
     </div>
 </template>
 
 <script>
-import AnimateCss from '@vue-interface/animate-css';
-import Triggerable from '@vue-interface/triggerable';
-import { unit } from '@vue-interface/utils';
-
 const registry = {
     zIndex: 0,
     panels: []
@@ -36,15 +42,20 @@ function run(fns, ...args) {
 
 export default {
 
-    components: {
-        AnimateCss
-    },
-
-    mixins: [
-        Triggerable
-    ],
-
     props: {
+
+        /**
+         * The cancel callback. 
+         *
+         * @type {Function}
+         * @return {Promise}
+         */
+        cancel: {
+            type: Function,
+            default(e) {
+                return true;
+            }
+        },
 
         duration: {
             type: String,
@@ -59,23 +70,33 @@ export default {
         registry: {
             type: Object,
             default: () => registry
-        }
+        },
+
+        /**
+         * Is the triggerable element showing.
+         *
+         * @property Boolean
+         */
+        show: Boolean,
 
     },
 
     data() {
         return {
-            zIndex: null,
+            isDisplaying: false,
             isHover: false,
-            isTopSlide: false
+            isShowing: false,
+            isTopSlide: false,
+            zIndex: -1,
         };
     },
 
     computed: {
         classes() {
-            return Object.assign({
-                'slide-top': !!this.isTopSlide
-            }, this.triggerableClasses);
+            return {
+                'show': this.isShowing,
+                'slide-top': !!this.isTopSlide,
+            };
         }
     },
 
@@ -89,6 +110,7 @@ export default {
 
         isShowing(value) {
             if(value) {
+                this.isDisplaying = true;
                 this.zIndex = ++this.registry.zIndex;
                 this.registry.panels.push(this);
             }
@@ -100,11 +122,27 @@ export default {
             if(!value) {
                 this.registry.panels.splice(index, 1);
             }
-        }        
+        },
+        
+        show(value) {
+            this.isShowing = value;
+        }       
+    },
+
+    mounted() {
+        if(this.show) {
+            this.open();
+        }
     },
 
     methods: {
-        
+
+        close() {
+            this.isShowing = false;
+
+            return this;
+        },
+
         divide(numerator, denominator) {
             const matches = numerator.toString().match(/^(\d+)(.+)$/);
 
@@ -115,34 +153,71 @@ export default {
             return numerator;
         },
 
+        open() {
+            // this.isDisplaying = true;
+            this.isShowing = true;
+
+
+            return this;
+        },
+
         styles() {
             if(this.registry.panels.indexOf(this) > -1) {
                 return {
                     zIndex: this.zIndex,
-                    transitionDuration: this.divide(this.duration, 2),
-                    transform: `translateX(calc((-1 * ${(this.registry.panels.length - 1) - this.registry.panels.indexOf(this)} * 3.5rem}) - ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'}))`
+                    // transitionDuration: this.duration,
+                    // transitionDuration: this.divide(this.duration, 2),
+                    // transform: `translateX(calc((-1 * ${(this.registry.panels.length - 1) - this.registry.panels.indexOf(this)} * 3.5rem}) - ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'}))`
                 };
             }
+        },
+
+        toggle() {
+            if(!this.isShowing) {
+                this.open();
+            }
+            else {
+                this.cancel();
+            }
+
+            return this;
+        },
+
+        onAfterEnter() {
+            this.$emit('open');
+        },
+
+        onAfterLeave() {
+            this.isDisplaying = false;
+            this.$emit('close');
         },
         
         onClick() {
             const index = this.registry.panels.indexOf(this);
 
-            const fns = this.registry.panels.slice(index + 1)
-                .reverse()
-                .map(slide => () => slide.cancel(slide));
+            console.log('onClick', index);
+
+            // const fns = this.registry.panels.slice(index + 1)
+            //     .reverse()
+            //     .map(slide => () => slide.cancel(slide));
             
-            run(fns).then(() => {
-                this.$emit('cancel');
-            });
+            // run(fns).then(() => {
+            //     this.$emit('cancel');
+            // });
         }, 
 
-        onCancel() {
-            if(this.registry.panels.indexOf(this) === this.registry.panels.length - 1) {
-                Promise.resolve(this.cancel(this)).then(() => {
-                    this.$emit('cancel');
-                });
-            }
+        onClickCancel() {   
+            Promise.resolve(this.cancel(this)).then(response => {
+                if(response !== false) {
+                    this.close();
+                }
+            });
+
+            // if(this.registry.panels.indexOf(this) === this.registry.panels.length - 1) {
+            //     Promise.resolve(this.cancel(this)).then(() => {
+            //         this.$emit('close');
+            //     });
+            // }
         },
 
         onMouseenter(el) {
@@ -193,6 +268,17 @@ export default {
     position: relative;
     flex-grow: 1;
     background: white;
+}
+
+.slide-panel .slide-enter-active,
+.slide-panel .slide-leave-active {
+    transition-property: transform;
+    transition-timing-function: ease-in;
+}
+
+.slide-panel .slide-enter-active.slide-enter,
+.slide-panel .slide-leave-active.slide-leave-to {
+    transform: translateX(100%);
 }
 
 .slide-panel .slide-panel-content-inner {
