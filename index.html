@@ -5,55 +5,82 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SlidePanel</title>
         <style>
-            .slide-panel-container {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100%;
-                display: flex;
-                flex-direction: row-reverse;
-                max-width: 55%;
+            .btn {
+                @apply px-2 py-1 rounded outline-none focus:ring-4;
             }
-            .slide-panel-container .slide-panel {
-                height: 100%;
-                right: 0;
-                flex-grow: 0;
+
+            .btn-primary {
+                @apply bg-blue-600 active:bg-blue-700 text-white ring-blue-200;
             }
-            .slide-panel-container .slide-panel:not(:last-child) {
-                position: absolute;
-                left: 0;
+
+            .btn-secondary {
+                @apply bg-slate-600 active:bg-slate-700 text-white ring-slate-200;
+            }
+
+            .btn-active {
+                @apply bg-amber-600 active:bg-amber-700 text-white ring-amber-200;
+            }
+
+            .form-label {
+                @apply block mb-1;
+            }
+
+            .form-control {
+                @apply px-2 py-1 w-full border border-slate-400 outline-none focus:ring-4 focus:border-blue-400 ring-blue-200 rounded;
+            }
+
+            .form-group {
+                @apply mb-3;
             }
         </style>
     </head>
     <body>
-        <div id="app" class="container">
-            <h1 class="mb-5">slide-panel</h1>
+        <div id="app" class="container max-w-screen-lg mx-auto flex flex-col" :class="{'items-end': align === 'left'}">
+            <h1 class="text-4xl mb-5">slide-panel</h1>
 
-            <h3>Basic Usage</h3>
+            <h3 class="text-2xl mb-2">Basic Usage</h3>
 
-            <button class="btn btn-primary" @click="() => $refs.slide1.toggle()">Slide 1</button>
-            <button class="btn btn-primary" @click="() => $refs.slide2.toggle()">Slide 2</button>
-            <button class="btn btn-primary" @click="() => $refs.slide3.toggle()">Slide 3</button>
-            <button class="btn btn-primary" @click="() => $refs.slide4.toggle()">Slide 4</button>
+            <p class="mb-2">Change Alignment</p>
 
-            <slide-deck>
-                <slide-panel ref="slide1" show>
+            <div class="flex gap-2 mb-4">
+                <button class="btn btn-secondary" :class="{'btn-active': align === 'left'}" @click="align = 'left'">Left</button>
+                <button class="btn btn-secondary" :class="{'btn-active': align === 'right'}" @click="align = 'right'">Right</button>
+            </div>
+
+            <p class="mb-2">Click to open a slide panel.</p>
+
+            <div class="flex gap-2">
+                <button class="btn btn-primary" @click="() => $refs.slide1.toggle()">Slide 1</button>
+                <button class="btn btn-primary" @click="() => $refs.slide2.toggle()">Slide 2</button>
+                <button class="btn btn-primary" @click="() => $refs.slide3.toggle()">Slide 3</button>
+                <button class="btn btn-primary" @click="() => $refs.slide4.toggle()">Slide 4</button>
+            </div>
+
+            <slide-deck :align="align">
+                <slide-panel ref="slide1">
                     <div>
-                        <h2>Slide 1</h2>
+                        <h2 class="text-2xl mb-2">Slide 1</h2>
                         <p>test</p>
                     </div>
                 </slide-panel>
 
                 <slide-panel ref="slide2">
                     <div>
-                        <h2>Slide 2</h2>
+                        <h2 class="text-2xl mb-2">Slide 2</h2>
                         <p>test</p>
                     </div>
                 </slide-panel>
 
-                <slide-panel ref="slide4" @cancel="onCancel">
+                <slide-panel ref="slide3">
                     <div>
-                        <h2>Slide 4</h2>
+                        <h2 class="text-2xl mb-2">Slide 3</h2>
+                        <p>test</p>
+                    </div>
+                </slide-panel>
+
+                <slide-panel ref="slide4" @close="onClose">
+                    <form @submit.prevent="$refs.slide4.close()">
+                        <h2 class="text-2xl mb-2">Slide 4</h2>
                         
                         <div class="form-group">
                             <label class="form-label">First</label>
@@ -70,23 +97,28 @@
                             <input class="form-control"/>
                         </div>
                         
-                    </div>
-                </slide-panel>
-
-                <slide-panel ref="slide3">
-                    <div>
-                        <h2>Slide 3</h2>
-                        <p>test</p>
-                    </div>
+                        <button class="btn btn-primary">Submit</button>
+                    </form>
                 </slide-panel>
             </slide-deck>
-        </div>
 
+            <h3 class="text-2xl mt-6 mb-2">Plugin</h3>
+            
+            <p class="mb-2">Click to open a slide panel.</p>
+
+            <div class="flex gap-2">
+                <button class="btn btn-primary" @click="onClickLeftPanel">Open Left Panel</button>
+                <button class="btn btn-primary" @click="onClickRightPanel">Open Right Panel</button>
+            </div>
+    
+        </div>
 
         <script type="module">
             import './index.css';
             import Vue from 'vue/dist/vue';
-            import { SlideDeck, SlidePanel } from './index.js'
+            import { SlideDeck, SlidePanel, SlidePanelPlugin } from './index.js'
+
+            Vue.use(SlidePanelPlugin);
 
             const vue = new Vue({
                 el: '#app',
@@ -95,21 +127,91 @@
                     SlidePanel
                 },
                 methods: {
-                    onCancel() {
-                        console.log('cancel successful');
-                    },
-                    async cancel() {   
-                        console.log('cancel');
+                    onClose(e, next) {
+                        e.preventDefault();
 
-                        if(!confirm('Are you sure you want to cancel?')) {
-                            return false;
+                        if(confirm('Are you sure you want to close this panel?')) {
+                            next();
                         }
+                    },
+                    onClickLeftPanel() {
+                        this.$slidePanel.left((h, slide) => {
+                            return h('div', [
+                                h('h2', {
+                                    staticClass: 'text-2xl mb-2',
+                                }, 'Panel Header'),
+                                h('p', {
+                                    staticClass: 'mb-3',
+                                }, 'This is a slide panel with some content'),
+                                h('button', {
+                                    staticClass: 'btn btn-primary',
+                                    on: {
+                                        click: () => {
+                                            slide.close(() => {
+                                                console.log('closed!')
+                                            });
+                                        }
+                                    }
+                                }, 'Close')
+                            ]);
+                        }, {
+                            on: {
+                                close(e, next) {
+                                    e.preventDefault();
+
+                                    if(confirm('Are you sure you want to cancel?')) {
+                                        next();
+                                    }
+                                    else {
+                                        reject(new Error('Cancelled!'));
+                                    }
+                                }
+                            }
+                        }).then(value => {
+                            console.log('Resolved: ', value);
+                        }, e => {
+                            console.log(e);
+                        });
+                    },
+                    onClickRightPanel() {
+                        this.$slidePanel.right((h, { close }) => {
+                            return h('div', [
+                                h('h2', {
+                                    staticClass: 'text-2xl mb-2',
+                                }, 'Panel Header'),
+                                h('p', {
+                                    staticClass: 'mb-3',
+                                }, 'This is a slide panel with some content'),
+                                h('button', {
+                                    staticClass: 'btn btn-primary',
+                                    on: {
+                                        click: () => close()
+                                    }
+                                }, 'Close')
+                            ]);
+                        }, {
+                            on: {
+                                close(e, next) {
+                                    e.preventDefault();
+
+                                    if(confirm('Are you sure you want to cancel?')) {
+                                        next();
+                                    }
+                                    else {
+                                        reject(new Error('Cancelled!'));
+                                    }
+                                }
+                            }
+                        }).then(value => {
+                            console.log('Resolved: ', value);
+                        }, e => {
+                            console.log(e);
+                        })
                     }
                 },
                 data() {
                     return {
-                        value: null,
-                        showActivity: false
+                        align: 'right'
                     };
                 }
             });

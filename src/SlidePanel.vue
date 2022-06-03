@@ -1,27 +1,29 @@
 <template>
-    <div class="slide-panel"
-        :style="{ 
-            zIndex,
-            display: isDisplaying ? 'flex' : 'none'
-        }"
+    <div
+        class="slide-panel"
+        :style="styles"
+        :class="classes"
         @mouseenter.self="onMouseenter"
         @mouseleave.self="onMouseleave"
         @keydown.esc="onEsc">
         <transition
             name="slide"
+            @before-enter="onBeforeEnter"
+            @enter="onEnter"
             @after-enter="onAfterEnter"
+            @before-leave="onBeforeLeave"
+            @leave="onLeave"
             @after-leave="onAfterLeave">
             <div
                 v-if="isShowing"
+                ref="content"
                 class="slide-panel-content"
-                :class="{show: isShowing}"
-                :style="{transitionDuration: duration}"
                 @click="onClick">
-                <div class="slide-panel-content-inner">
+                <div ref="inner" class="slide-panel-content-inner">
                     <slot />
                 </div>
                 <div>
-                    <a href="#" class="slide-panel-close" @click.prevent="onClickCancel">
+                    <a ref="close" href="#" class="slide-panel-close" @click.prevent="close">
                         <span>&times;</span>
                     </a>
                 </div>
@@ -31,10 +33,7 @@
 </template>
 
 <script>
-const registry = {
-    zIndex: 0,
-    panels: []
-};
+import converter from 'css-unit-converter';
 
 function run(fns, ...args) {
     return fns.reduce((p, fn) => p.then(() => fn(...args)), Promise.resolve());
@@ -44,32 +43,24 @@ export default {
 
     props: {
 
-        /**
-         * The cancel callback. 
-         *
-         * @type {Function}
-         * @return {Promise}
-         */
-        cancel: {
-            type: Function,
-            default(e) {
-                return true;
-            }
-        },
-
-        duration: {
+        align: {
             type: String,
-            default: '500ms'
+            default() {
+                return this.$parent.align;
+            },
+            validator: value => ['left', 'right'].indexOf(value) > -1
         },
         
-        width: {
-            type: [String, Number],
-            default: 50
-        },
+        // width: {
+        //     type: [String, Number],
+        //     default: 50
+        // },
 
         registry: {
             type: Object,
-            default: () => registry
+            default() {
+                return this.$parent.registry;
+            }
         },
 
         /**
@@ -97,7 +88,34 @@ export default {
                 'show': this.isShowing,
                 'slide-top': !!this.isTopSlide,
             };
-        }
+        },
+
+        duration() {
+            return getComputedStyle(this.$refs.content)
+                .transitionDuration
+                .split(',')
+                .map(value => {
+                    const [ 
+                        parsed, number, unit
+                    ] = value.trim().match(/^([\d.]+)(\w+)$/);
+    
+                    return converter(parseFloat(number), unit, 'ms');
+                })
+                .sort((a, b) => {
+                    return a - b;
+                })
+                .shift();
+        },
+
+        styles() {
+            const modifier = this.$parent.align === 'left' ? 1 : -1;
+
+            return {
+                zIndex: this.isDisplaying ? this.zIndex : -1,
+                display: this.isDisplaying ? 'flex' : 'none',
+                transform: this.isShowing && `translateX(calc((${modifier} * ${(this.registry.panels.length - 1) - this.registry.panels.indexOf(this)} * 3.5rem) - (${modifier * -1} * ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'})))`
+            };
+        },
     },
 
     watch: {
@@ -109,36 +127,67 @@ export default {
         },
 
         isShowing(value) {
+            const index = this.registry.panels.indexOf(this);
+
             if(value) {
                 this.isDisplaying = true;
                 this.zIndex = ++this.registry.zIndex;
                 this.registry.panels.push(this);
             }
-        },
-        
-        isDisplaying(value) {
-            const index = this.registry.panels.indexOf(this);
-
-            if(!value) {
+            else {
                 this.registry.panels.splice(index, 1);
             }
         },
-        
+
+        isDisplaying(value) {
+            if(value) {
+                this.$emit('open', this);
+            }
+            else if(!this.registry.panels.length) {
+                this.registry.zIndex = 0;
+            }
+        },
+                
         show(value) {
-            this.isShowing = value;
+            if(value) {
+                this.open();
+            }
+            else {
+                this.close();
+            }
         }       
     },
 
     mounted() {
         if(this.show) {
-            this.open();
+            setTimeout(() => this.open(), 1);
         }
     },
 
     methods: {
 
-        close() {
-            this.isShowing = false;
+        close(fn) {
+            const event = new Event('close', {
+                cancelable: true
+            });
+            
+            new Promise(resolve => {
+                setTimeout(() => {
+                    this.$emit('close', event, resolve);
+
+                    if(!event.defaultPrevented) {
+                        resolve(true);
+                    }
+                });
+            }).then(value => {
+                if(typeof fn === 'function') {
+                    value = fn(value);
+                }
+
+                console.log('then');
+
+                return this.isShowing = value === false;
+            });
 
             return this;
         },
@@ -154,22 +203,9 @@ export default {
         },
 
         open() {
-            // this.isDisplaying = true;
             this.isShowing = true;
 
-
             return this;
-        },
-
-        styles() {
-            if(this.registry.panels.indexOf(this) > -1) {
-                return {
-                    zIndex: this.zIndex,
-                    // transitionDuration: this.duration,
-                    // transitionDuration: this.divide(this.duration, 2),
-                    // transform: `translateX(calc((-1 * ${(this.registry.panels.length - 1) - this.registry.panels.indexOf(this)} * 3.5rem}) - ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'}))`
-                };
-            }
         },
 
         toggle() {
@@ -177,47 +213,61 @@ export default {
                 this.open();
             }
             else {
-                this.cancel();
+                this.close();
             }
 
             return this;
         },
 
+        onBeforeEnter() {
+            this.$emit('before-enter', this);
+        },
+
+        onEnter() {
+            this.$emit('enter', this);
+        },
+
         onAfterEnter() {
-            this.$emit('open');
+            this.$emit('after-enter', this);
+        },
+
+        onBeforeLeave() {
+            this.$emit('before-leave', this);
+        },
+
+        onLeave() {
+            this.$emit('leave', this);
         },
 
         onAfterLeave() {
-            this.isDisplaying = false;
-            this.$emit('close');
+            this.isDisplaying = this.isShowing;
+            this.$emit('after-leave', this);
         },
         
-        onClick() {
-            const index = this.registry.panels.indexOf(this);
+        onClick(e) {
+            if(this.$refs.close) {
+                const index = this.registry.panels.indexOf(this);
+                const slides = this.registry.panels.slice(index + 1);
+                const fns = slides
+                    .reverse()
+                    .map((slide, i) => () => new Promise(resolve => {
+                        slide.close(value => {
+                            if(value !== false) {
+                                setTimeout(() => {
+                                    resolve(value);
+                                },  this.duration / (slides.length - i));
+                            }
 
-            console.log('onClick', index);
+                            return value;
+                        });
+                    }));
 
-            // const fns = this.registry.panels.slice(index + 1)
-            //     .reverse()
-            //     .map(slide => () => slide.cancel(slide));
-            
-            // run(fns).then(() => {
-            //     this.$emit('cancel');
-            // });
+                run(fns);
+            }
         }, 
 
-        onClickCancel() {   
-            Promise.resolve(this.cancel(this)).then(response => {
-                if(response !== false) {
-                    this.close();
-                }
-            });
-
-            // if(this.registry.panels.indexOf(this) === this.registry.panels.length - 1) {
-            //     Promise.resolve(this.cancel(this)).then(() => {
-            //         this.$emit('close');
-            //     });
-            // }
+        onClickClose() {
+            this.close();
         },
 
         onMouseenter(el) {
@@ -245,14 +295,15 @@ export default {
     display: inline-flex;
     transition-property: all;
     transition-timing-function: ease-in;
-}
-
-.slide-right .slide-panel-close {
-    margin-left: 1rem;
+    transition-duration: 250ms;
 }
 
 .slide-panel:not(.slide-top) .slide-panel-content {
     z-index: -1;
+}
+
+.slide-panel:not(.slide-top):hover {
+    transition-timing-function: ease-out;
 }
 
 .slide-panel:not(.slide-top):hover .slide-panel-content {
@@ -264,20 +315,33 @@ export default {
     padding: 1rem;
     z-index: 1;
     overflow: auto;
-    box-shadow: 0 0 .25rem rgba(0, 0, 0, .25);
+    box-shadow: 0 0 .5rem rgba(0, 0, 0, .35);
     position: relative;
     flex-grow: 1;
     background: white;
+    transition-duration: 333ms;
 }
 
 .slide-panel .slide-enter-active,
 .slide-panel .slide-leave-active {
     transition-property: transform;
+}
+
+.slide-panel .slide-enter-active {
+    transition-timing-function: ease-out;
+}
+
+.slide-panel .slide-leave-active {
     transition-timing-function: ease-in;
 }
 
-.slide-panel .slide-enter-active.slide-enter,
-.slide-panel .slide-leave-active.slide-leave-to {
+.slide-left .slide-panel .slide-enter-active.slide-enter,
+.slide-left .slide-panel .slide-leave-active.slide-leave-to {
+    transform: translateX(-100%);
+}
+
+.slide-right .slide-panel .slide-enter-active.slide-enter,
+.slide-right .slide-panel .slide-leave-active.slide-leave-to {
     transform: translateX(100%);
 }
 
@@ -298,7 +362,6 @@ export default {
 .slide-panel .slide-panel-close {
     position: absolute;
     top: .5em;
-    right: .5em;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -308,6 +371,15 @@ export default {
     width: 1.5em;
     height: 1.5em;
     color: #a6a6a6;
+    outline: none;
+}
+
+.slide-left .slide-panel .slide-panel-close {
+    left: .25rem;
+}
+
+.slide-right .slide-panel .slide-panel-close {
+    right: .25rem;
 }
 
 .slide-panel .slide-panel-close span {
@@ -315,13 +387,15 @@ export default {
     transform: translateY(-1px);
 }
 
-.slide-panel .slide-panel-close:hover {
+.slide-panel .slide-panel-close:hover,
+.slide-panel .slide-panel-close:focus {
     text-decoration: none;
     background-color: rgb(230, 230, 230);
 }
 
 .slide-panel .slide-panel-close:active {
     background-color: rgb(220, 220, 220);
+    transform: scale(.95);
 }
 
 @media(max-width: 1024px) {
