@@ -184,8 +184,6 @@ export default {
                     value = fn(value);
                 }
 
-                console.log('then');
-
                 return this.isShowing = value === false;
             });
 
