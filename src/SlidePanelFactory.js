@@ -25,6 +25,8 @@ export default class SlidePanelFactory {
                 const SlidePanelWrapper = this.$vue.extend({
                     beforeDestroy() {
                         this.$root.$el.parentNode.removeChild(this.$root.$el);
+
+                        resolve();
                     },
                     render(h) {
                         const context = merge({
@@ -51,7 +53,7 @@ export default class SlidePanelFactory {
                 });
 
                 new SlidePanelWrapper({
-                    el: slideDeckWrapper.$el.appendChild(document.createElement('div')),
+                    el: slideDeckWrapper.$refs.deck.$refs.panel.appendChild(document.createElement('div')),
                 });
             }).finally(() => {
                 

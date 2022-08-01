@@ -4,8 +4,7 @@
         :style="styles"
         :class="classes"
         @mouseenter.self="onMouseenter"
-        @mouseleave.self="onMouseleave"
-        @keydown.esc="onEsc">
+        @mouseleave.self="onMouseleave">
         <transition
             name="slide"
             @before-enter="onBeforeEnter"
@@ -50,11 +49,6 @@ export default {
             },
             validator: value => ['left', 'right'].indexOf(value) > -1
         },
-        
-        // width: {
-        //     type: [String, Number],
-        //     default: 50
-        // },
 
         registry: {
             type: Object,
@@ -70,6 +64,16 @@ export default {
          */
         show: Boolean,
 
+        /**
+         * The width of the slide panel.
+         *
+         * @property String
+         */
+        width: {
+            type: String,
+            default: '33%'
+        }
+
     },
 
     data() {
@@ -78,6 +82,7 @@ export default {
             isHover: false,
             isShowing: false,
             isTopSlide: false,
+            translateX: 0,
             zIndex: -1,
         };
     },
@@ -109,13 +114,15 @@ export default {
 
         styles() {
             const modifier = this.$parent.align === 'left' ? 1 : -1;
+            const order = (this.registry.panels.length - 1) - this.registry.panels.indexOf(this);
 
             return {
                 zIndex: this.isDisplaying ? this.zIndex : -1,
                 display: this.isDisplaying ? 'flex' : 'none',
-                transform: this.isShowing && `translateX(calc((${modifier} * ${(this.registry.panels.length - 1) - this.registry.panels.indexOf(this)} * 3.5rem) - (${modifier * -1} * ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'})))`
+                // transform: this.isShowing && !this.isTopSlide && `translateX(-100%)`
+                transform: this.isShowing && `translateX(calc((${modifier} * ${order} * 3.5rem) - (${modifier * -1} * ${this.isHover && !this.isTopSlide ? '3.5rem' : '0rem'})))`
             };
-        },
+        }
     },
 
     watch: {
@@ -147,7 +154,7 @@ export default {
                 this.registry.zIndex = 0;
             }
         },
-                
+
         show(value) {
             if(value) {
                 this.open();
@@ -184,8 +191,6 @@ export default {
                     value = fn(value);
                 }
 
-                console.log('then');
-
                 return this.isShowing = value === false;
             });
 
@@ -217,6 +222,18 @@ export default {
             }
 
             return this;
+        },
+
+        translatePosition() {
+
+        },
+
+        x() {
+            return this.$el && this.$el.getBoundingClientRect().x;
+        },
+
+        y() {
+            return this.$el && this.$el.getBoundingClientRect().y;
         },
 
         onBeforeEnter() {
@@ -255,7 +272,7 @@ export default {
                             if(value !== false) {
                                 setTimeout(() => {
                                     resolve(value);
-                                },  this.duration / (slides.length - i));
+                                },  Math.max(100, this.duration / (slides.length - i)));
                             }
 
                             return value;

@@ -2,7 +2,7 @@ var render$1 = function() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "slide-deck-panel", class: _vm.classes, style: _vm.styles }, [_vm._t("default")], 2);
+  return _c("div", { staticClass: "slide-deck-panel-wrapper", style: { display: !_vm.display ? "none" : void 0 } }, [_vm.backdrop ? _c("div", { staticClass: "slide-deck-panel-backdrop", on: { "click": _vm.onClickBackdrop } }) : _vm._e(), _c("div", { ref: "panel", staticClass: "slide-deck-panel", class: _vm.classes, style: _vm.styles }, [_vm._t("default")], 2)]);
 };
 var staticRenderFns$1 = [];
 var SlideDeck_vue_vue_type_style_index_0_lang = "";
@@ -57,8 +57,8 @@ function normalizeComponent(scriptExports, render2, staticRenderFns2, functional
     options
   };
 }
-function unit(value, uom = "px") {
-  return value !== null && value !== void 0 && value !== false && isFinite(value) ? `${value}${uom}` : value;
+function run$1(fns, ...args) {
+  return fns.reduce((p, fn) => p.then(() => fn(...args)), Promise.resolve());
 }
 const __vue2_script$1 = {
   props: {
@@ -67,41 +67,77 @@ const __vue2_script$1 = {
       default: "right",
       validator: (value) => ["left", "right"].indexOf(value) > -1
     },
-    minWidth: [Number, String],
-    maxWidth: [Number, String],
-    width: [Number, String],
+    backdrop: Boolean,
     registry: {
       type: Object,
       default() {
+        const self = this;
         return {
           zIndex: 0,
-          panels: []
+          panels: [],
+          get slideDeck() {
+            return self;
+          },
+          get topSlide() {
+            return this.panels.find((panel) => panel.isTopSlide);
+          }
         };
       }
     }
   },
+  data: () => ({
+    display: false,
+    isBackdropShowing: false
+  }),
   computed: {
     classes() {
       return {
-        [`slide-${this.align}`]: true
+        [`slide-${this.align}`]: true,
+        "has-slide-top": this.registry.panels.reduce((carry, panel) => carry || panel.isTopSlide, false)
       };
+    },
+    lastSlide() {
+      return this.registry.panels[this.registry.panels.length - 1];
     },
     styles() {
       return {
-        width: this.width ? unit(this.width) : null,
-        minWidth: this.minWidth ? unit(this.minWidth) : null,
-        maxWidth: this.maxWidth ? unit(this.maxWidth) : null,
-        zIndex: this.registry.zIndex === 0 ? -1 : 1,
-        display: this.registry.zIndex === 0 ? "none" : void 0
+        display: !this.display ? "none" : void 0,
+        zIndex: this.registry.zIndex === 0 ? -1 : 1
       };
     }
   },
-  created() {
+  watch: {
+    ["registry.zIndex"](value) {
+      this.display = value > 0;
+    }
+  },
+  mounted() {
     window.addEventListener("keyup", ({ code }) => {
       if (code === "Escape" && this.registry.panels.length) {
         this.registry.panels[this.registry.panels.length - 1].close();
       }
     });
+  },
+  methods: {
+    x() {
+      return this.$el.getBoundingClientRect().x;
+    },
+    y() {
+      return this.$el.getBoundingClientRect().y;
+    },
+    onClickBackdrop() {
+      const fns = [...this.registry.panels].reverse().map((slide, i) => () => new Promise((resolve) => {
+        slide.close((value) => {
+          if (value !== false) {
+            setTimeout(() => {
+              resolve(value);
+            }, Math.max(100, slide.duration / (this.registry.panels.length - i)));
+          }
+          return value;
+        });
+      }));
+      run$1(fns);
+    }
   }
 };
 const __cssModules$1 = {};
@@ -245,11 +281,6 @@ var render = function() {
       return null;
     }
     return _vm.onMouseleave.apply(null, arguments);
-  }, "keydown": function($event) {
-    if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) {
-      return null;
-    }
-    return _vm.onEsc.apply(null, arguments);
   } } }, [_c("transition", { attrs: { "name": "slide" }, on: { "before-enter": _vm.onBeforeEnter, "enter": _vm.onEnter, "after-enter": _vm.onAfterEnter, "before-leave": _vm.onBeforeLeave, "leave": _vm.onLeave, "after-leave": _vm.onAfterLeave } }, [_vm.isShowing ? _c("div", { ref: "content", staticClass: "slide-panel-content", on: { "click": _vm.onClick } }, [_c("div", { ref: "inner", staticClass: "slide-panel-content-inner" }, [_vm._t("default")], 2), _c("div", [_c("a", { ref: "close", staticClass: "slide-panel-close", attrs: { "href": "#" }, on: { "click": function($event) {
     $event.preventDefault();
     return _vm.close.apply(null, arguments);
@@ -275,7 +306,11 @@ const __vue2_script = {
         return this.$parent.registry;
       }
     },
-    show: Boolean
+    show: Boolean,
+    width: {
+      type: String,
+      default: "33%"
+    }
   },
   data() {
     return {
@@ -283,6 +318,7 @@ const __vue2_script = {
       isHover: false,
       isShowing: false,
       isTopSlide: false,
+      translateX: 0,
       zIndex: -1
     };
   },
@@ -298,19 +334,20 @@ const __vue2_script = {
         const [
           parsed,
           number,
-          unit2
+          unit
         ] = value.trim().match(/^([\d.]+)(\w+)$/);
-        return cssUnitConverter(parseFloat(number), unit2, "ms");
+        return cssUnitConverter(parseFloat(number), unit, "ms");
       }).sort((a, b) => {
         return a - b;
       }).shift();
     },
     styles() {
       const modifier = this.$parent.align === "left" ? 1 : -1;
+      const order = this.registry.panels.length - 1 - this.registry.panels.indexOf(this);
       return {
         zIndex: this.isDisplaying ? this.zIndex : -1,
         display: this.isDisplaying ? "flex" : "none",
-        transform: this.isShowing && `translateX(calc((${modifier} * ${this.registry.panels.length - 1 - this.registry.panels.indexOf(this)} * 3.5rem) - (${modifier * -1} * ${this.isHover && !this.isTopSlide ? "3.5rem" : "0rem"})))`
+        transform: this.isShowing && `translateX(calc((${modifier} * ${order} * 3.5rem) - (${modifier * -1} * ${this.isHover && !this.isTopSlide ? "3.5rem" : "0rem"})))`
       };
     }
   },
@@ -365,7 +402,6 @@ const __vue2_script = {
         if (typeof fn === "function") {
           value = fn(value);
         }
-        console.log("then");
         return this.isShowing = value === false;
       });
       return this;
@@ -388,6 +424,14 @@ const __vue2_script = {
         this.close();
       }
       return this;
+    },
+    translatePosition() {
+    },
+    x() {
+      return this.$el && this.$el.getBoundingClientRect().x;
+    },
+    y() {
+      return this.$el && this.$el.getBoundingClientRect().y;
     },
     onBeforeEnter() {
       this.$emit("before-enter", this);
@@ -417,7 +461,7 @@ const __vue2_script = {
             if (value !== false) {
               setTimeout(() => {
                 resolve(value);
-              }, this.duration / (slides.length - i));
+              }, Math.max(100, this.duration / (slides.length - i)));
             }
             return value;
           });
@@ -567,6 +611,7 @@ class SlidePanelFactory {
         const SlidePanelWrapper = this.$vue.extend({
           beforeDestroy() {
             this.$root.$el.parentNode.removeChild(this.$root.$el);
+            resolve();
           },
           render(h) {
             const context = cjs({
@@ -588,24 +633,25 @@ class SlidePanelFactory {
           }
         });
         new SlidePanelWrapper({
-          el: slideDeckWrapper.$el.appendChild(document.createElement("div"))
+          el: slideDeckWrapper.$refs.deck.$refs.panel.appendChild(document.createElement("div"))
         });
       }).finally(() => {
       });
     };
   }
 }
-var SlidePanelPlugin = (Vue) => {
+var SlidePanelPlugin = (Vue, options = {}) => {
+  Vue.prototype.$store = options.store;
   Vue.prototype.$slidePanel = new SlidePanelFactory(Vue);
-  Vue.prototype.$slidePanel.register("right", {
+  Vue.prototype.$slidePanel.register("right", cjs({
     props: {
       align: "right"
     }
-  });
-  Vue.prototype.$slidePanel.register("left", {
+  }, options.right || {}));
+  Vue.prototype.$slidePanel.register("left", cjs({
     props: {
       align: "left"
     }
-  });
+  }, options.left || {}));
 };
 export { SlideDeck, SlidePanel, SlidePanelPlugin };

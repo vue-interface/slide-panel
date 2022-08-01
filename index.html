@@ -64,21 +64,21 @@
                     </div>
                 </slide-panel>
 
-                <slide-panel ref="slide2">
+                <slide-panel ref="slide2" class="w-96">
                     <div>
                         <h2 class="text-2xl mb-2">Slide 2</h2>
                         <p>test</p>
                     </div>
                 </slide-panel>
 
-                <slide-panel ref="slide3">
+                <slide-panel ref="slide3" class="w-64">
                     <div>
                         <h2 class="text-2xl mb-2">Slide 3</h2>
                         <p>test</p>
                     </div>
                 </slide-panel>
 
-                <slide-panel ref="slide4" @close="onClose">
+                <slide-panel ref="slide4" class="w-96" @close="onClose">
                     <form @submit.prevent="$refs.slide4.close()">
                         <h2 class="text-2xl mb-2">Slide 4</h2>
                         
