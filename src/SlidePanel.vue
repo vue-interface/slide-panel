@@ -113,7 +113,7 @@ export default {
         },
 
         styles() {
-            const modifier = this.$parent.align === 'left' ? 1 : -1;
+            const modifier = this.align === 'left' ? 1 : -1;
             const order = (this.registry.panels.length - 1) - this.registry.panels.indexOf(this);
 
             return {
