@@ -115,13 +115,10 @@
 
         <script type="module">
             import './index.css';
-            import Vue from 'vue/dist/vue';
+            import { createApp } from 'vue/dist/vue.esm-bundler';
             import { SlideDeck, SlidePanel, SlidePanelPlugin } from './index.js'
 
-            Vue.use(SlidePanelPlugin);
-
-            const vue = new Vue({
-                el: '#app',
+            const vue = createApp({
                 components: {
                     SlideDeck,
                     SlidePanel
@@ -214,7 +211,9 @@
                         align: 'right'
                     };
                 }
-            });
+            })
+            .use(SlidePanelPlugin)
+            .mount('#app');
         </script>
     </body>
 </html>

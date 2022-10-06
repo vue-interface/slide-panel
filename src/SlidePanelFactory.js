@@ -1,48 +1,40 @@
 import SlideDeck from './SlideDeck.vue';
 import SlidePanel from './SlidePanel.vue';
 import merge from 'deepmerge';
+import { h, createApp } from 'vue';
 
 export default class SlidePanelFactory {
 
-    constructor(vue) {
-        this.$vue = vue;
-    }
-
     register(type, options = {}) {
-        const SlideDeckWrapper = this.$vue.extend({
-            functional: true,
-            render: h => h(SlideDeck, Object.assign({
+        const SlideDeckWrapper = (props, context) => h(
+            SlideDeck,
+            Object.assign({
                 ref: 'deck'
-            }, options))
-        });
+            }, options)
+        );
 
-        const slideDeckWrapper = new SlideDeckWrapper({
-            el: document.body.appendChild(document.createElement('div'))
-        });
+        const slideDeckWrapper = createApp(SlideDeckWrapper)
+            .mount(document.body.appendChild(document.createElement('div')));
 
         this[type] = (callback, options = {}) => {
             return new Promise(resolve => {
-                const SlidePanelWrapper = this.$vue.extend({
+                const SlidePanelWrapper = {
                     beforeDestroy() {
                         this.$root.$el.parentNode.removeChild(this.$root.$el);
 
                         resolve();
                     },
-                    render(h) {
+                    render() {
                         const context = merge({
                             ref: 'panel',
-                            props: {
-                                show: true,
-                                align: slideDeckWrapper.$refs.deck.align,
-                            },
-                            on: {
-                                ['after-leave']: () => {
-                                    this.$nextTick(() => this.$destroy());
-                                }
+                            show: true,
+                            align: slideDeckWrapper.$refs.deck.align,
+                            onAfterLeave: () => {
+                                this.$nextTick(() => this.$destroy());
                             }
                         }, options);
 
-                        context.props.registry = slideDeckWrapper.$refs.deck.registry;
+                        context.registry = slideDeckWrapper.$refs.deck.registry;
 
                         return h(SlidePanel, context, [() => {
                             return callback.apply(this.$refs.panel, [
@@ -50,11 +42,10 @@ export default class SlidePanelFactory {
                             ]);
                         }]);
                     }
-                });
+                };
 
-                new SlidePanelWrapper({
-                    el: slideDeckWrapper.$refs.deck.$refs.panel.appendChild(document.createElement('div')),
-                });
+                createApp(SlidePanelWrapper)
+                    .mount(slideDeckWrapper.$refs.deck.$refs.panel.appendChild(document.createElement('div')));
             }).finally(() => {
                 
             });
