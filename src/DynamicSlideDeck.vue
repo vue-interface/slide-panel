@@ -7,8 +7,7 @@ import merge from 'deepmerge';
 export default {
     props: {
         options: Object,
-        panels: Array,
-        removePanel: Function
+        panels: Array
     },
 
     methods: {
@@ -19,7 +18,7 @@ export default {
                 show: true,
                 onAfterLeave: () => {
                     panel.resolve();
-                    this.removePanel(panel);
+                    panel.showing = false;
                 }
             };
             const mergedProps = merge(props, panel.options);
@@ -34,7 +33,7 @@ export default {
         return h(
             SlideDeck,
             this.options,
-            this.panels.map((panel) => this.createPanelVnode(panel))
+            this.panels.filter(panel => panel.showing).map(panel => this.createPanelVnode(panel))
         );
     },
 };
