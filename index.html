@@ -168,12 +168,11 @@
                         });
                     },
                     onClickRightPanel() {
-                        const random = Math.floor(Math.random() * 10);
                         this.$slidePanel.right(({ close }) => {
                             return h('div', [
                                 h('h2', {
                                     class: 'text-2xl mb-2',
-                                }, `${random} Panel Header`),
+                                }, `Panel Header`),
                                 h('p', {
                                     class: 'mb-3',
                                 }, 'This is a slide panel with some content'),
