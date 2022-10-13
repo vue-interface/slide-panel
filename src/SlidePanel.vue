@@ -8,10 +8,10 @@
         <transition
             name="slide"
             @before-enter="onBeforeEnter"
-            @enter="onEnter"
+            @enter-from="onEnterFrom"
             @after-enter="onAfterEnter"
             @before-leave="onBeforeLeave"
-            @leave="onLeave"
+            @leave-from="onLeaveFrom"
             @after-leave="onAfterLeave">
             <div
                 v-if="isShowing"
@@ -39,23 +39,9 @@ function run(fns, ...args) {
 };
 
 export default {
+    inject: ['align', 'registry'],
 
     props: {
-
-        align: {
-            type: String,
-            default() {
-                return this.$parent.align;
-            },
-            validator: value => ['left', 'right'].indexOf(value) > -1
-        },
-
-        registry: {
-            type: Object,
-            default() {
-                return this.$parent.registry;
-            }
-        },
 
         /**
          * Is the triggerable element showing.
@@ -127,12 +113,6 @@ export default {
 
     watch: {
 
-        ['registry.panels'](value) {
-            const index = this.registry.panels.indexOf(this);
-
-            this.isTopSlide = index > -1 && index + 1 === this.registry.panels.length;
-        },
-
         isShowing(value) {
             const index = this.registry.panels.indexOf(this);
 
@@ -169,6 +149,11 @@ export default {
         if(this.show) {
             setTimeout(() => this.open(), 1);
         }
+        this.$watch(() => this.registry.panels, () => {
+            const index = this.registry.panels.indexOf(this);
+
+            this.isTopSlide = index > -1 && index + 1 === this.registry.panels.length;
+        }, { deep: true });
     },
 
     methods: {
@@ -240,8 +225,8 @@ export default {
             this.$emit('before-enter', this);
         },
 
-        onEnter() {
-            this.$emit('enter', this);
+        onEnterFrom() {
+            this.$emit('enter-from', this);
         },
 
         onAfterEnter() {
@@ -252,8 +237,8 @@ export default {
             this.$emit('before-leave', this);
         },
 
-        onLeave() {
-            this.$emit('leave', this);
+        onLeaveFrom() {
+            this.$emit('leave-from', this);
         },
 
         onAfterLeave() {
@@ -352,12 +337,12 @@ export default {
     transition-timing-function: ease-in;
 }
 
-.slide-left .slide-panel .slide-enter-active.slide-enter,
-.slide-left .slide-panel .slide-leave-active.slide-leave-to {
+.slide-left .slide-panel .slide-enter-active.slide-enter-from,
+.slide-left .slide-panel .slide-leave-active.slide-leave-to{
     transform: translateX(-100%);
 }
 
-.slide-right .slide-panel .slide-enter-active.slide-enter,
+.slide-right .slide-panel .slide-enter-active.slide-enter-from,
 .slide-right .slide-panel .slide-leave-active.slide-leave-to {
     transform: translateX(100%);
 }

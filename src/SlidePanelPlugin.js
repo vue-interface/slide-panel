@@ -4,15 +4,11 @@ import merge from 'deepmerge';
 export const factory = new SlidePanelFactory();
 
 factory.register('right', merge({
-    props: {
-        align: 'right'
-    }
+    align: 'right'
 }, {}));
 
 factory.register('left', merge({
-    props: {
-        align: 'left'
-    }
+    align: 'left'
 }, {}));
 
 export default (app, options = {}) => {
