@@ -1,40 +1,50 @@
+<template>
+    <slide-deck v-bind="options">
+        <slide-panel
+            v-for="panel in panels"
+            :key="panel.id"
+            :ref="refNameFor(panel)"
+            :show="true"
+            v-bind="panel.options"
+            @afterLeave="() => onAfterLeaveSlide(panel)">
+            <component :is="getPanelChildren(panel)" />
+        </slide-panel>
+    </slide-deck>
+</template>
+
 <script>
 import SlideDeck from './SlideDeck.vue';
 import SlidePanel from './SlidePanel.vue';
-import { h } from 'vue';
-import merge from 'deepmerge';
 
 export default {
+    components: { SlideDeck, SlidePanel },
+
     props: {
         options: Object,
-        panels: Array
+        panels: Array,
+        removePanel: Function
     },
 
-    methods: {
-        createPanelVnode(panel) {
-            const refName = `panel-${panel.id}`;
-            const props = {
-                ref: refName,
-                show: true,
-                onAfterLeave: () => {
-                    panel.resolve();
-                    panel.showing = false;
-                }
-            };
-            const mergedProps = merge(props, panel.options);
-            return h(SlidePanel, mergedProps, () => {
-                const instance = this.$refs[refName];
-                return [panel.callback.apply(instance, [instance])];
-            });
+    computed: {
+        filteredPanels() {
+            return this.panels.filter(p => p.showing);
         }
     },
 
-    render() {
-        return h(
-            SlideDeck,
-            this.options,
-            this.panels.filter(panel => panel.showing).map(panel => this.createPanelVnode(panel))
-        );
-    },
+    methods: {
+        refNameFor(panel) {
+            return `panel-${panel.id}`;
+        },
+
+        getPanelChildren(panel) {
+            const instance = this.$refs[this.refNameFor(panel)][0];
+            return panel.callback.apply(instance, [instance]);
+        },
+
+        onAfterLeaveSlide(panel) {
+            panel.resolve();
+            this.removePanel(panel);
+        }
+    }
 };
 </script>

@@ -6,9 +6,12 @@ export default class SlidePanelFactory {
     register(type, options = {}) {
         let currentId = -1;
         const panels = reactive([]);
+        function removePanel(panel) {
+            panels.splice(panels.findIndex(p => p.id === panel.id), 1);
+        }
 
         const el = document.body.appendChild(document.createElement('div'));
-        createApp(DynamicSlideDeck, { options, panels }).mount(el);
+        createApp(DynamicSlideDeck, { options, panels, removePanel }).mount(el);
 
         this[type] = (callback, options = {}) => {
             return new Promise(resolve => {
