@@ -14,15 +14,4 @@ factory.register('left', merge({
 export default (app, options = {}) => {
     app.config.globalProperties.$store = options.store;
     app.config.globalProperties.$slidePanel = factory;
-
-
-    // /**
-    //  * Open a slide panel.
-    //  * 
-    //  * @property {Function} content
-    //  * @property {Object} props
-    //  */
-    // Vue.prototype.$slidePanel = (content, props) => {
-    //     console.log(component);
-    // };
 };
