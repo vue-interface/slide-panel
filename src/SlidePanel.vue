@@ -308,11 +308,11 @@ export default {
     transition-timing-function: ease-out;
 }
 
-.slide-panel:not(.slide-top):hover .slide-panel-content {
+.slide-panel:not(.slide-top):hover .slide-panel-content:not(.slide-leave-active) {
     cursor: pointer;
     background: rgb(252, 252, 252);
 }
- 
+
 .slide-panel .slide-panel-content {
     padding: 1rem;
     z-index: 1;
@@ -389,8 +389,8 @@ export default {
     transform: translateY(-1px);
 }
 
-.slide-panel .slide-panel-close:hover,
-.slide-panel .slide-panel-close:focus {
+.slide-panel .slide-panel-close:not(.slide-leave-active):hover,
+.slide-panel .slide-panel-close:not(.slide-leave-active):focus {
     text-decoration: none;
     background-color: rgb(230, 230, 230);
 }
