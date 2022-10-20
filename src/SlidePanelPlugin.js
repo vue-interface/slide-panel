@@ -13,5 +13,6 @@ factory.register('left', merge({
 
 export default (app, options = {}) => {
     app.config.globalProperties.$store = options.store;
+    app.config.globalProperties.$http = options.http;
     app.config.globalProperties.$slidePanel = factory;
 };

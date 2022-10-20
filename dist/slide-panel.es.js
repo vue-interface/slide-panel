@@ -1,4 +1,4 @@
-import { ref as A, reactive as j, computed as g, watch as D, onMounted as F, provide as I, openBlock as d, createElementBlock as h, normalizeClass as M, unref as w, normalizeStyle as P, createCommentVNode as $, createElementVNode as p, renderSlot as z, withModifiers as x, createVNode as H, Transition as N, withCtx as E, resolveComponent as C, createBlock as S, normalizeProps as R, guardReactiveProps as V, Fragment as X, renderList as K, mergeProps as Y, resolveDynamicComponent as q, createApp as G } from "vue";
+import { ref as A, reactive as j, computed as g, watch as D, onMounted as F, provide as I, openBlock as d, createElementBlock as p, normalizeClass as P, unref as w, normalizeStyle as M, createCommentVNode as $, createElementVNode as h, renderSlot as z, withModifiers as x, createVNode as H, Transition as N, withCtx as E, resolveComponent as C, createBlock as S, normalizeProps as R, guardReactiveProps as V, Fragment as X, renderList as K, mergeProps as Y, resolveDynamicComponent as q, createApp as G } from "vue";
 const J = {
   __name: "SlideDeck",
   props: {
@@ -49,19 +49,19 @@ const J = {
       }));
       r(o);
     }
-    return I("align", t.align), I("registry", n), (o, f) => (d(), h("div", {
-      class: M(["slide-deck-panel-wrapper", w(l)]),
-      style: P({ display: s.value ? void 0 : "none" })
+    return I("align", t.align), I("registry", n), (o, f) => (d(), p("div", {
+      class: P(["slide-deck-panel-wrapper", w(l)]),
+      style: M({ display: s.value ? void 0 : "none" })
     }, [
-      e.backdrop ? (d(), h("div", {
+      e.backdrop ? (d(), p("div", {
         key: 0,
         class: "slide-deck-panel-backdrop",
         onClick: c
       })) : $("", !0),
-      p("div", {
+      h("div", {
         ref: "panel",
-        class: M(["slide-deck-panel", w(i)]),
-        style: P(w(a))
+        class: P(["slide-deck-panel", w(i)]),
+        style: M(w(a))
       }, [
         z(o.$slots, "default")
       ], 6)
@@ -326,13 +326,13 @@ const Z = {
 }, U = {
   ref: "inner",
   class: "slide-panel-content-inner"
-}, ee = /* @__PURE__ */ p("span", null, "\xD7", -1), te = [
+}, ee = /* @__PURE__ */ h("span", null, "\xD7", -1), te = [
   ee
 ];
 function re(e, t, r, s, n, i) {
-  return d(), h("div", {
-    class: M(["slide-panel", i.classes]),
-    style: P(i.styles),
+  return d(), p("div", {
+    class: P(["slide-panel", i.classes]),
+    style: M(i.styles),
     onMouseenter: t[2] || (t[2] = x((...l) => i.onMouseenter && i.onMouseenter(...l), ["self"])),
     onMouseleave: t[3] || (t[3] = x((...l) => i.onMouseleave && i.onMouseleave(...l), ["self"]))
   }, [
@@ -346,17 +346,17 @@ function re(e, t, r, s, n, i) {
       onAfterLeave: i.onAfterLeave
     }, {
       default: E(() => [
-        n.isShowing ? (d(), h("div", {
+        n.isShowing ? (d(), p("div", {
           key: 0,
           ref: "content",
           class: "slide-panel-content",
           onClick: t[1] || (t[1] = (...l) => i.onClick && i.onClick(...l))
         }, [
-          p("div", U, [
+          h("div", U, [
             z(e.$slots, "default")
           ], 512),
-          p("div", null, [
-            p("a", {
+          h("div", null, [
+            h("a", {
               ref: "close",
               href: "#",
               class: "slide-panel-close",
@@ -390,7 +390,7 @@ function ie(e, t, r, s, n, i) {
   const l = C("slide-panel"), a = C("slide-deck");
   return d(), S(a, R(V(r.options)), {
     default: E(() => [
-      (d(!0), h(X, null, K(r.panels, (c) => (d(), S(l, Y({
+      (d(!0), p(X, null, K(r.panels, (c) => (d(), S(l, Y({
         key: c.id,
         ref_for: !0,
         ref: "panel",
@@ -440,17 +440,17 @@ function ce(e) {
 }
 function de(e) {
   var t = Object.prototype.toString.call(e);
-  return t === "[object RegExp]" || t === "[object Date]" || pe(e);
+  return t === "[object RegExp]" || t === "[object Date]" || he(e);
 }
 var fe = typeof Symbol == "function" && Symbol.for, ue = fe ? Symbol.for("react.element") : 60103;
-function pe(e) {
+function he(e) {
   return e.$$typeof === ue;
 }
-function he(e) {
+function pe(e) {
   return Array.isArray(e) ? [] : {};
 }
 function m(e, t) {
-  return t.clone !== !1 && t.isMergeableObject(e) ? u(he(e), e, t) : e;
+  return t.clone !== !1 && t.isMergeableObject(e) ? u(pe(e), e, t) : e;
 }
 function me(e, t, r) {
   return e.concat(t).map(function(s) {
@@ -510,7 +510,7 @@ O.register("left", B({
   align: "left"
 }, {}));
 const Se = (e, t = {}) => {
-  e.config.globalProperties.$store = t.store, e.config.globalProperties.$slidePanel = O;
+  e.config.globalProperties.$store = t.store, e.config.globalProperties.$http = t.http, e.config.globalProperties.$slidePanel = O;
 };
 export {
   J as SlideDeck,
