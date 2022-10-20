@@ -25,12 +25,6 @@ export default {
         removePanel: Function
     },
 
-    computed: {
-        filteredPanels() {
-            return this.panels.filter(p => p.showing);
-        }
-    },
-
     methods: {
         refNameFor(panel) {
             return `panel-${panel.id}`;
