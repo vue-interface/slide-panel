@@ -3,7 +3,7 @@
         <slide-panel
             v-for="panel in panels"
             :key="panel.id"
-            :ref="refNameFor(panel)"
+            ref="panel"
             :show="true"
             v-bind="panel.options"
             @afterLeave="() => onAfterLeaveSlide(panel)">
@@ -26,12 +26,8 @@ export default {
     },
 
     methods: {
-        refNameFor(panel) {
-            return `panel-${panel.id}`;
-        },
-
         getPanelChildren(panel) {
-            const instance = this.$refs[this.refNameFor(panel)][0];
+            const instance = this.$refs.panel[this.panels.indexOf(panel)];
             return panel.callback.apply(instance, [instance]);
         },
 
