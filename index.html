@@ -115,13 +115,11 @@
 
         <script type="module">
             import './index.css';
-            import Vue from 'vue/dist/vue';
+            import { createApp } from 'vue/dist/vue.esm-bundler';
             import { SlideDeck, SlidePanel, SlidePanelPlugin } from './index.js'
+            import { h } from 'vue';
 
-            Vue.use(SlidePanelPlugin);
-
-            const vue = new Vue({
-                el: '#app',
+            const vue = createApp({
                 components: {
                     SlideDeck,
                     SlidePanel
@@ -135,36 +133,32 @@
                         }
                     },
                     onClickLeftPanel() {
-                        this.$slidePanel.left((h, slide) => {
+                        this.$slidePanel.left((slide) => {
                             return h('div', [
                                 h('h2', {
-                                    staticClass: 'text-2xl mb-2',
+                                    class: 'text-2xl mb-2',
                                 }, 'Panel Header'),
                                 h('p', {
-                                    staticClass: 'mb-3',
+                                    class: 'mb-3',
                                 }, 'This is a slide panel with some content'),
                                 h('button', {
-                                    staticClass: 'btn btn-primary',
-                                    on: {
-                                        click: () => {
-                                            slide.close(() => {
-                                                console.log('closed!')
-                                            });
-                                        }
+                                    class: 'btn btn-primary',
+                                    onClick: () => {
+                                        slide.close(() => {
+                                            console.log('closed!')
+                                        });
                                     }
                                 }, 'Close')
                             ]);
                         }, {
-                            on: {
-                                close(e, next) {
-                                    e.preventDefault();
+                            onClose(e, next) {
+                                e.preventDefault();
 
-                                    if(confirm('Are you sure you want to cancel?')) {
-                                        next();
-                                    }
-                                    else {
-                                        reject(new Error('Cancelled!'));
-                                    }
+                                if(confirm('Are you sure you want to cancel?')) {
+                                    next();
+                                }
+                                else {
+                                    reject(new Error('Cancelled!'));
                                 }
                             }
                         }).then(value => {
@@ -174,32 +168,28 @@
                         });
                     },
                     onClickRightPanel() {
-                        this.$slidePanel.right((h, { close }) => {
+                        this.$slidePanel.right(({ close }) => {
                             return h('div', [
                                 h('h2', {
-                                    staticClass: 'text-2xl mb-2',
-                                }, 'Panel Header'),
+                                    class: 'text-2xl mb-2',
+                                }, `Panel Header`),
                                 h('p', {
-                                    staticClass: 'mb-3',
+                                    class: 'mb-3',
                                 }, 'This is a slide panel with some content'),
                                 h('button', {
-                                    staticClass: 'btn btn-primary',
-                                    on: {
-                                        click: () => close()
-                                    }
+                                    class: 'btn btn-primary',
+                                    onClick: close
                                 }, 'Close')
                             ]);
                         }, {
-                            on: {
-                                close(e, next) {
-                                    e.preventDefault();
+                            onClose(e, next) {
+                                e.preventDefault();
 
-                                    if(confirm('Are you sure you want to cancel?')) {
-                                        next();
-                                    }
-                                    else {
-                                        reject(new Error('Cancelled!'));
-                                    }
+                                if(confirm('Are you sure you want to cancel?')) {
+                                    next();
+                                }
+                                else {
+                                    reject(new Error('Cancelled!'));
                                 }
                             }
                         }).then(value => {
@@ -214,7 +204,9 @@
                         align: 'right'
                     };
                 }
-            });
+            })
+            .use(SlidePanelPlugin)
+            .mount('#app');
         </script>
     </body>
 </html>

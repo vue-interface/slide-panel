@@ -1,21 +1,17 @@
 import SlidePanelFactory from './SlidePanelFactory';
 import merge from 'deepmerge';
 
-export const factory = new SlidePanelFactory(Vue);
+export const factory = new SlidePanelFactory();
 
 factory.register('right', merge({
-    props: {
-        align: 'right'
-    }
-}, options.right || {}));
+    align: 'right'
+}, {}));
 
 factory.register('left', merge({
-    props: {
-        align: 'left'
-    }
-}, options.left || {}));
+    align: 'left'
+}, {}));
 
-export default (Vue, options = {}) => {
-    Vue.prototype.$store = options.store;
-    Vue.prototype.$slidePanel = factory;
+export default (app, options = {}) => {
+    app.config.globalProperties.$store = options.store;
+    app.config.globalProperties.$slidePanel = factory;
 };
