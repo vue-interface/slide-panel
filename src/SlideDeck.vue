@@ -1,12 +1,3 @@
-<template>
-    <div class="slide-deck-panel-wrapper" :style="{display: !display ? 'none' : undefined}" :class="wrapperClasses">
-        <div v-if="backdrop" class="slide-deck-panel-backdrop" @click="onClickBackdrop" />
-        <div ref="panel" class="slide-deck-panel" :class="classes" :style="styles">
-            <slot />
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref, reactive, defineProps, watch, computed, onMounted, provide } from 'vue';
 
@@ -31,7 +22,9 @@ const props = defineProps({
 });
 
 const display = ref(false);
+
 const isBackdropShowing = ref(false);
+
 const registry = reactive({
     zIndex: 0,
     panels: [],
@@ -39,30 +32,36 @@ const registry = reactive({
         return this.panels.find(panel => panel.isTopSlide);
     }
 });
+
 const classes = computed(() => {
     return {
         [`slide-${props.align}`]: true,
         'has-slide-top': registry.panels.reduce((carry, panel) => carry || panel.isTopSlide, false)
     };
 });
+
 const wrapperClasses = computed(() => {
     return {
         left: props.align === 'left',
         right: props.align === 'right'
     };
 });
+
 const lastSlide = computed(() => {
     return registry.panels[registry.panels.length - 1];
 });
+
 const styles = computed(() => {
     return {
         display: !display ? 'none' : undefined,
         zIndex: registry.zIndex === 0 ? -1 : 1
     };
 });
+
 watch(() => registry.zIndex, value => {
     display.value = value > 0;
 });
+
 onMounted(() => {
     window.addEventListener('keyup', ({ code }) => {
         if(code === 'Escape' && registry.panels.length) {
@@ -100,6 +99,15 @@ function onClickBackdrop() {
 provide('align', props.align);
 provide('registry', registry);
 </script>
+
+<template>
+    <div class="slide-deck-panel-wrapper" :style="{display: !display ? 'none' : undefined}" :class="wrapperClasses">
+        <div v-if="backdrop" class="slide-deck-panel-backdrop" @click="onClickBackdrop" />
+        <div ref="panel" class="slide-deck-panel" :class="classes" :style="styles">
+            <slot />
+        </div>
+    </div>
+</template>
 
 <style>
 .slide-deck-panel-wrapper {

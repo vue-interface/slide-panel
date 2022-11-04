@@ -38,7 +38,7 @@
         <div id="app" class="container max-w-screen-lg mx-auto flex flex-col" :class="{'items-end': align === 'left'}">
             <h1 class="text-4xl mb-5">slide-panel</h1>
 
-            <h3 class="text-2xl mb-2">Basic Usage</h3>
+            <h3 class="text-2xl mb-2">Template</h3>
 
             <p class="mb-2">Change Alignment</p>
 
@@ -49,7 +49,7 @@
 
             <p class="mb-2">Click to open a slide panel.</p>
 
-            <div class="flex gap-2">
+            <div class="flex gap-2 mb-6">
                 <button class="btn btn-primary" @click="() => $refs.slide1.toggle()">Slide 1</button>
                 <button class="btn btn-primary" @click="() => $refs.slide2.toggle()">Slide 2</button>
                 <button class="btn btn-primary" @click="() => $refs.slide3.toggle()">Slide 3</button>
@@ -116,7 +116,7 @@
         <script type="module">
             import './index.css';
             import { createApp } from 'vue/dist/vue.esm-bundler';
-            import { SlideDeck, SlidePanel, SlidePanelPlugin } from './index.js'
+            import { SlideDeck, SlidePanel, SlidePanelPlugin } from './index'
             import { h } from 'vue';
 
             const vue = createApp({
@@ -145,7 +145,7 @@
                                     class: 'btn btn-primary',
                                     onClick: () => {
                                         slide.close(() => {
-                                            console.log('closed!')
+
                                         });
                                     }
                                 }, 'Close')
@@ -162,9 +162,9 @@
                                 }
                             }
                         }).then(value => {
-                            console.log('Resolved: ', value);
+
                         }, e => {
-                            console.log(e);
+
                         });
                     },
                     onClickRightPanel() {
@@ -193,9 +193,9 @@
                                 }
                             }
                         }).then(value => {
-                            console.log('Resolved: ', value);
+
                         }, e => {
-                            console.log(e);
+
                         })
                     }
                 },

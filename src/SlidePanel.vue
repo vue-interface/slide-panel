@@ -1,36 +1,3 @@
-<template>
-    <div
-        class="slide-panel"
-        :style="styles"
-        :class="classes"
-        @mouseenter.self="onMouseenter"
-        @mouseleave.self="onMouseleave">
-        <transition
-            name="slide"
-            @before-enter="onBeforeEnter"
-            @enter-from="onEnterFrom"
-            @after-enter="onAfterEnter"
-            @before-leave="onBeforeLeave"
-            @leave-from="onLeaveFrom"
-            @after-leave="onAfterLeave">
-            <div
-                v-if="isShowing"
-                ref="content"
-                class="slide-panel-content"
-                @click="onClick">
-                <div ref="inner" class="slide-panel-content-inner">
-                    <slot />
-                </div>
-                <div>
-                    <a ref="close" href="#" class="slide-panel-close" @click.prevent="close">
-                        <span>&times;</span>
-                    </a>
-                </div>
-            </div>
-        </transition>
-    </div>
-</template>
-
 <script>
 import converter from 'css-unit-converter';
 
@@ -290,6 +257,39 @@ export default {
 
 };
 </script>
+
+<template>
+    <div
+        class="slide-panel"
+        :style="styles"
+        :class="classes"
+        @mouseenter.self="onMouseenter"
+        @mouseleave.self="onMouseleave">
+        <transition
+            name="slide"
+            @before-enter="onBeforeEnter"
+            @enter-from="onEnterFrom"
+            @after-enter="onAfterEnter"
+            @before-leave="onBeforeLeave"
+            @leave-from="onLeaveFrom"
+            @after-leave="onAfterLeave">
+            <div
+                v-if="isShowing"
+                ref="content"
+                class="slide-panel-content"
+                @click="onClick">
+                <div ref="inner" class="slide-panel-content-inner">
+                    <slot />
+                </div>
+                <div>
+                    <a ref="close" href="#" class="slide-panel-close" @click.prevent="close">
+                        <span>&times;</span>
+                    </a>
+                </div>
+            </div>
+        </transition>
+    </div>
+</template>
 
 <style>
 .slide-panel {
