@@ -2,8 +2,20 @@
   "name": "@vue-interface/slide-panel",
   "version": "1.0.0-beta.5",
   "description": "A Vue slide panel component.",
-  "main": "./dist/slide-panel.umd.js",
-  "module": "./index.js",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/slide-panel.umd.cjs",
+  "module": "./dist/slide-panel.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/slide-panel.js",
+      "require": "./dist/slide-panel.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "browserslist": "last 2 versions, > 0.5%, ie >= 11",
   "scripts": {
     "dev": "vite",
