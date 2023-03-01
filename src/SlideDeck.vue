@@ -1,5 +1,5 @@
-<script setup>
-import { ref, reactive, defineProps, watch, computed, onMounted, provide } from 'vue';
+<script lang="ts" setup>
+import { ref, reactive, watch, computed, onMounted, provide } from 'vue';
 
 function run(fns, ...args) {
     return fns.reduce((p, fn) => p.then(() => fn(...args)), Promise.resolve());
@@ -53,7 +53,7 @@ const lastSlide = computed(() => {
 
 const styles = computed(() => {
     return {
-        display: !display ? 'none' : undefined,
+        display: !display.value ? 'none' : undefined,
         zIndex: registry.zIndex === 0 ? -1 : 1
     };
 });
@@ -101,9 +101,19 @@ provide('registry', registry);
 </script>
 
 <template>
-    <div class="slide-deck-panel-wrapper" :style="{display: !display ? 'none' : undefined}" :class="wrapperClasses">
-        <div v-if="backdrop" class="slide-deck-panel-backdrop" @click="onClickBackdrop" />
-        <div ref="panel" class="slide-deck-panel" :class="classes" :style="styles">
+    <div
+        class="slide-deck-panel-wrapper"
+        :style="{display: !display ? 'none' : undefined}"
+        :class="wrapperClasses">
+        <div
+            v-if="backdrop"
+            class="slide-deck-panel-backdrop"
+            @click="onClickBackdrop" />
+        <div
+            ref="panel"
+            class="slide-deck-panel"
+            :class="classes"
+            :style="styles">
             <slot />
         </div>
     </div>

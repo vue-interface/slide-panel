@@ -265,7 +265,7 @@ export default {
         :class="classes"
         @mouseenter.self="onMouseenter"
         @mouseleave.self="onMouseleave">
-        <transition
+        <Transition
             name="slide"
             @before-enter="onBeforeEnter"
             @enter-from="onEnterFrom"
@@ -278,16 +278,22 @@ export default {
                 ref="content"
                 class="slide-panel-content"
                 @click="onClick">
-                <div ref="inner" class="slide-panel-content-inner">
+                <div
+                    ref="inner"
+                    class="slide-panel-content-inner">
                     <slot />
                 </div>
                 <div>
-                    <a ref="close" href="#" class="slide-panel-close" @click.prevent="close">
+                    <a
+                        ref="close"
+                        href="#"
+                        class="slide-panel-close"
+                        @click.prevent="close">
                         <span>&times;</span>
                     </a>
                 </div>
             </div>
-        </transition>
+        </Transition>
     </div>
 </template>
 

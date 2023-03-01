@@ -26,15 +26,15 @@ export default {
 </script>
 
 <template>
-    <slide-deck v-bind="options">
-        <slide-panel
+    <SlideDeck v-bind="options">
+        <SlidePanel
             v-for="panel in panels"
             :key="panel.id"
             ref="panel"
             :show="true"
             v-bind="panel.options"
             @after-leave="() => onAfterLeave(panel)">
-            <component :is="getPanelChildren(panel)" />
-        </slide-panel>
-    </slide-deck>
+            <Component :is="getPanelChildren(panel)" />
+        </SlidePanel>
+    </SlideDeck>
 </template>

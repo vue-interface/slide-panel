@@ -1,5 +1,5 @@
-import { ref as O, reactive as $, computed as g, watch as D, onMounted as F, provide as A, openBlock as d, createElementBlock as h, normalizeClass as M, unref as x, normalizeStyle as P, createCommentVNode as z, createElementVNode as p, renderSlot as L, withModifiers as w, createVNode as H, Transition as N, withCtx as E, resolveComponent as I, createBlock as _, normalizeProps as R, guardReactiveProps as V, Fragment as X, renderList as K, mergeProps as Y, resolveDynamicComponent as q, render as G, h as C } from "vue";
-const J = {
+import { defineComponent as B, ref as E, reactive as $, computed as g, watch as F, onMounted as H, provide as A, openBlock as d, createElementBlock as h, normalizeClass as P, unref as x, normalizeStyle as M, createCommentVNode as z, createElementVNode as p, renderSlot as L, withModifiers as w, createVNode as N, Transition as R, withCtx as O, resolveComponent as C, createBlock as S, normalizeProps as V, guardReactiveProps as X, Fragment as K, renderList as Y, mergeProps as q, resolveDynamicComponent as G, render as J, h as I } from "vue";
+const Q = /* @__PURE__ */ B({
   __name: "SlideDeck",
   props: {
     align: {
@@ -14,8 +14,8 @@ const J = {
     function n(l, ...f) {
       return l.reduce((y, v) => y.then(() => v(...f)), Promise.resolve());
     }
-    const s = O(!1);
-    O(!1);
+    const s = E(!1);
+    E(!1);
     const r = $({
       zIndex: 0,
       panels: [],
@@ -31,12 +31,12 @@ const J = {
     }));
     g(() => r.panels[r.panels.length - 1]);
     const a = g(() => ({
-      display: s ? void 0 : "none",
+      display: s.value ? void 0 : "none",
       zIndex: r.zIndex === 0 ? -1 : 1
     }));
-    D(() => r.zIndex, (l) => {
+    F(() => r.zIndex, (l) => {
       s.value = l > 0;
-    }), F(() => {
+    }), H(() => {
       window.addEventListener("keyup", ({ code: l }) => {
         l === "Escape" && r.panels.length && r.panels[r.panels.length - 1].close();
       });
@@ -50,8 +50,8 @@ const J = {
       n(l);
     }
     return A("align", t.align), A("registry", r), (l, f) => (d(), h("div", {
-      class: M(["slide-deck-panel-wrapper", x(o)]),
-      style: P({ display: s.value ? void 0 : "none" })
+      class: P(["slide-deck-panel-wrapper", x(o)]),
+      style: M({ display: s.value ? void 0 : "none" })
     }, [
       e.backdrop ? (d(), h("div", {
         key: 0,
@@ -60,15 +60,15 @@ const J = {
       })) : z("", !0),
       p("div", {
         ref: "panel",
-        class: M(["slide-deck-panel", x(i)]),
-        style: P(x(a))
+        class: P(["slide-deck-panel", x(i)]),
+        style: M(x(a))
       }, [
         L(l.$slots, "default")
       ], 6)
     ], 6));
   }
-};
-var S = {
+});
+var _ = {
   px: {
     px: 1,
     cm: 96 / 2.54,
@@ -172,12 +172,12 @@ var S = {
     dpcm: 96 / 2.54,
     dppx: 1
   }
-}, Q = function(e, t, n, s) {
-  if (!S.hasOwnProperty(n))
+}, W = function(e, t, n, s) {
+  if (!_.hasOwnProperty(n))
     throw new Error("Cannot convert to " + n);
-  if (!S[n].hasOwnProperty(t))
+  if (!_[n].hasOwnProperty(t))
     throw new Error("Cannot convert from " + t + " to " + n);
-  var r = S[n][t] * e;
+  var r = _[n][t] * e;
   return s !== !1 ? (s = Math.pow(10, parseInt(s) || 5), Math.round(r * s) / s) : r;
 };
 const T = (e, t) => {
@@ -186,10 +186,10 @@ const T = (e, t) => {
     n[s] = r;
   return n;
 };
-function W(e, ...t) {
+function Z(e, ...t) {
   return e.reduce((n, s) => n.then(() => s(...t)), Promise.resolve());
 }
-const Z = {
+const U = {
   inject: ["align", "registry"],
   props: {
     show: Boolean,
@@ -222,7 +222,7 @@ const Z = {
           n,
           s
         ] = e.trim().match(/^([\d.]+)(\w+)$/);
-        return Q(parseFloat(n), s, "ms");
+        return W(parseFloat(n), s, "ms");
       }).sort((e, t) => e - t).shift();
     },
     styles() {
@@ -306,7 +306,7 @@ const Z = {
             o(a);
           }, Math.max(100, this.duration / (n.length - i))), a));
         }));
-        W(s);
+        Z(s);
       }
     },
     onClickClose() {
@@ -323,20 +323,20 @@ const Z = {
       });
     }
   }
-}, U = {
+}, ee = {
   ref: "inner",
   class: "slide-panel-content-inner"
-}, ee = /* @__PURE__ */ p("span", null, "\xD7", -1), te = [
-  ee
+}, te = /* @__PURE__ */ p("span", null, "\xD7", -1), ne = [
+  te
 ];
-function ne(e, t, n, s, r, i) {
+function re(e, t, n, s, r, i) {
   return d(), h("div", {
-    class: M(["slide-panel", i.classes]),
-    style: P(i.styles),
+    class: P(["slide-panel", i.classes]),
+    style: M(i.styles),
     onMouseenter: t[2] || (t[2] = w((...o) => i.onMouseenter && i.onMouseenter(...o), ["self"])),
     onMouseleave: t[3] || (t[3] = w((...o) => i.onMouseleave && i.onMouseleave(...o), ["self"]))
   }, [
-    H(N, {
+    N(R, {
       name: "slide",
       onBeforeEnter: i.onBeforeEnter,
       onEnterFrom: i.onEnterFrom,
@@ -345,14 +345,14 @@ function ne(e, t, n, s, r, i) {
       onLeaveFrom: i.onLeaveFrom,
       onAfterLeave: i.onAfterLeave
     }, {
-      default: E(() => [
+      default: O(() => [
         r.isShowing ? (d(), h("div", {
           key: 0,
           ref: "content",
           class: "slide-panel-content",
           onClick: t[1] || (t[1] = (...o) => i.onClick && i.onClick(...o))
         }, [
-          p("div", U, [
+          p("div", ee, [
             L(e.$slots, "default")
           ], 512),
           p("div", null, [
@@ -361,7 +361,7 @@ function ne(e, t, n, s, r, i) {
               href: "#",
               class: "slide-panel-close",
               onClick: t[0] || (t[0] = w((...o) => i.close && i.close(...o), ["prevent"]))
-            }, te, 512)
+            }, ne, 512)
           ])
         ], 512)) : z("", !0)
       ]),
@@ -369,8 +369,8 @@ function ne(e, t, n, s, r, i) {
     }, 8, ["onBeforeEnter", "onEnterFrom", "onAfterEnter", "onBeforeLeave", "onLeaveFrom", "onAfterLeave"])
   ], 38);
 }
-const re = /* @__PURE__ */ T(Z, [["render", ne]]), se = {
-  components: { SlideDeck: J, SlidePanel: re },
+const se = /* @__PURE__ */ T(U, [["render", re]]), ie = {
+  components: { SlideDeck: Q, SlidePanel: se },
   props: {
     options: Object,
     panels: Array,
@@ -386,11 +386,11 @@ const re = /* @__PURE__ */ T(Z, [["render", ne]]), se = {
     }
   }
 };
-function ie(e, t, n, s, r, i) {
-  const o = I("slide-panel"), a = I("slide-deck");
-  return d(), _(a, R(V(n.options)), {
-    default: E(() => [
-      (d(!0), h(X, null, K(n.panels, (c) => (d(), _(o, Y({
+function oe(e, t, n, s, r, i) {
+  const o = C("SlidePanel"), a = C("SlideDeck");
+  return d(), S(a, V(X(n.options)), {
+    default: O(() => [
+      (d(!0), h(K, null, Y(n.panels, (c) => (d(), S(o, q({
         key: c.id,
         ref_for: !0,
         ref: "panel",
@@ -398,8 +398,8 @@ function ie(e, t, n, s, r, i) {
       }, c.options, {
         onAfterLeave: () => i.onAfterLeave(c)
       }), {
-        default: E(() => [
-          (d(), _(q(i.getPanelChildren(c))))
+        default: O(() => [
+          (d(), S(G(i.getPanelChildren(c))))
         ]),
         _: 2
       }, 1040, ["onAfterLeave"]))), 128))
@@ -407,15 +407,15 @@ function ie(e, t, n, s, r, i) {
     _: 1
   }, 16);
 }
-const oe = /* @__PURE__ */ T(se, [["render", ie]]);
-class le {
+const le = /* @__PURE__ */ T(ie, [["render", oe]]);
+class ae {
   constructor(t) {
     this.app = t;
   }
   mount(t) {
     t.appContext = this.app._context;
     const n = document.createElement("div");
-    G(C(t), n), document.body.append(n);
+    J(I(t), n), document.body.append(n);
   }
   register(t, n = {}) {
     let s = -1;
@@ -426,70 +426,70 @@ class le {
     this[t] = (o, a = {}) => new Promise((c) => {
       r.push({ callback: o, options: a, resolve: c, id: ++s, showing: !0 });
     }).finally(() => {
-    }), this.mount(C(oe, { options: n, panels: r, removePanel: i }));
+    }), this.mount(I(le, { options: n, panels: r, removePanel: i }));
   }
 }
-var ae = function(t) {
-  return ce(t) && !de(t);
+var ce = function(t) {
+  return de(t) && !fe(t);
 };
-function ce(e) {
+function de(e) {
   return !!e && typeof e == "object";
 }
-function de(e) {
+function fe(e) {
   var t = Object.prototype.toString.call(e);
-  return t === "[object RegExp]" || t === "[object Date]" || pe(e);
+  return t === "[object RegExp]" || t === "[object Date]" || he(e);
 }
-var fe = typeof Symbol == "function" && Symbol.for, ue = fe ? Symbol.for("react.element") : 60103;
-function pe(e) {
-  return e.$$typeof === ue;
-}
+var ue = typeof Symbol == "function" && Symbol.for, pe = ue ? Symbol.for("react.element") : 60103;
 function he(e) {
+  return e.$$typeof === pe;
+}
+function me(e) {
   return Array.isArray(e) ? [] : {};
 }
 function m(e, t) {
-  return t.clone !== !1 && t.isMergeableObject(e) ? u(he(e), e, t) : e;
+  return t.clone !== !1 && t.isMergeableObject(e) ? u(me(e), e, t) : e;
 }
-function me(e, t, n) {
+function ge(e, t, n) {
   return e.concat(t).map(function(s) {
     return m(s, n);
   });
 }
-function ge(e, t) {
+function ye(e, t) {
   if (!t.customMerge)
     return u;
   var n = t.customMerge(e);
   return typeof n == "function" ? n : u;
 }
-function ye(e) {
+function ve(e) {
   return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(e).filter(function(t) {
-    return e.propertyIsEnumerable(t);
+    return Object.propertyIsEnumerable.call(e, t);
   }) : [];
 }
 function k(e) {
-  return Object.keys(e).concat(ye(e));
+  return Object.keys(e).concat(ve(e));
 }
-function B(e, t) {
+function D(e, t) {
   try {
     return t in e;
   } catch {
     return !1;
   }
 }
-function ve(e, t) {
-  return B(e, t) && !(Object.hasOwnProperty.call(e, t) && Object.propertyIsEnumerable.call(e, t));
+function be(e, t) {
+  return D(e, t) && !(Object.hasOwnProperty.call(e, t) && Object.propertyIsEnumerable.call(e, t));
 }
-function be(e, t, n) {
+function xe(e, t, n) {
   var s = {};
   return n.isMergeableObject(e) && k(e).forEach(function(r) {
     s[r] = m(e[r], n);
   }), k(t).forEach(function(r) {
-    ve(e, r) || (B(e, r) && n.isMergeableObject(t[r]) ? s[r] = ge(r, n)(e[r], t[r], n) : s[r] = m(t[r], n));
+    be(e, r) || (D(e, r) && n.isMergeableObject(t[r]) ? s[r] = ye(r, n)(e[r], t[r], n) : s[r] = m(t[r], n));
   }), s;
 }
 function u(e, t, n) {
-  n = n || {}, n.arrayMerge = n.arrayMerge || me, n.isMergeableObject = n.isMergeableObject || ae, n.cloneUnlessOtherwiseSpecified = m;
+  n = n || {}, n.arrayMerge = n.arrayMerge || ge, n.isMergeableObject = n.isMergeableObject || ce, n.cloneUnlessOtherwiseSpecified = m;
   var s = Array.isArray(t), r = Array.isArray(e), i = s === r;
-  return i ? s ? n.arrayMerge(e, t, n) : be(e, t, n) : m(t, n);
+  return i ? s ? n.arrayMerge(e, t, n) : xe(e, t, n) : m(t, n);
 }
 u.all = function(t, n) {
   if (!Array.isArray(t))
@@ -498,9 +498,9 @@ u.all = function(t, n) {
     return u(s, r, n);
   }, {});
 };
-var xe = u, j = xe;
+var we = u, j = we;
 const _e = (e, t = {}) => {
-  const n = new le(e);
+  const n = new ae(e);
   n.register("right", j({
     align: "right"
   }, {})), n.register("left", j({
@@ -508,7 +508,7 @@ const _e = (e, t = {}) => {
   }, {})), e.provide("slidePanel", n), e.config.globalProperties.$slidePanel = n;
 };
 export {
-  J as SlideDeck,
-  re as SlidePanel,
+  Q as SlideDeck,
+  se as SlidePanel,
   _e as SlidePanelPlugin
 };

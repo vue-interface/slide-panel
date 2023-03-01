@@ -11,8 +11,6 @@ declare namespace _sfc_main {
     }
     namespace methods {
         function getPanelChildren(panel: any): any;
-        function getPanelChildren(panel: any): any;
-        function onAfterLeave(panel: any): void;
         function onAfterLeave(panel: any): void;
     }
 }
