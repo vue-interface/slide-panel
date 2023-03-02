@@ -14,7 +14,8 @@
       "import": "./dist/slide-panel.js",
       "require": "./dist/slide-panel.umd.cjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./dist/style.css": "./dist/style.css"
   },
   "browserslist": "last 2 versions, > 0.5%, ie >= 11",
   "scripts": {
