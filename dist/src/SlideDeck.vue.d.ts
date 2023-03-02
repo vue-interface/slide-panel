@@ -13,20 +13,20 @@ declare const _sfc_main: import("vue").DefineComponent<{
     isBackdropShowing: import("vue").Ref<boolean>;
     registry: {
         zIndex: number;
-        panels: any[];
+        panels: never[];
         readonly topSlide: any;
     };
     classes: import("vue").ComputedRef<{
-        [x: string]: any;
-        'has-slide-top': any;
+        [x: string]: boolean;
+        'has-slide-top': boolean;
     }>;
     wrapperClasses: import("vue").ComputedRef<{
         left: boolean;
         right: boolean;
     }>;
-    lastSlide: import("vue").ComputedRef<any>;
+    lastSlide: import("vue").ComputedRef<never>;
     styles: import("vue").ComputedRef<{
-        display: string;
+        display: string | undefined;
         zIndex: number;
     }>;
     x: () => any;

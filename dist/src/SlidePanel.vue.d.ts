@@ -18,16 +18,9 @@ declare namespace _sfc_main {
         zIndex: number;
     };
     namespace computed {
-        function classes(): {
-            show: any;
-            'slide-top': boolean;
-        };
-        function duration(): number;
-        function styles(): {
-            zIndex: any;
-            display: string;
-            transform: string;
-        };
+        function classes(): any;
+        function duration(): any;
+        function styles(): any;
     }
     namespace watch {
         function isShowing(value: any): void;
