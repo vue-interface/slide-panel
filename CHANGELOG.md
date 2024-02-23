@@ -1,3 +1,10 @@
+# [1.0.0-beta.12](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2024-02-23)
+
+
+### Bug Fixes
+
+* added esc key to close the panels ([89d343c](https://github.com/vue-interface/slide-panel/commit/89d343c0c8f893efab6f71f4ba8e3ef13a6da9cf))
+
 # [1.0.0-beta.11](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2024-02-23)
 
 
