@@ -3,7 +3,8 @@
   "version": "1.0.0-beta.9",
   "description": "A Vue slide panel component.",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "type": "module",
   "main": "./dist/slide-panel.umd.cjs",

@@ -37,7 +37,7 @@ export function createRegistry(): SlidePanelRegistry {
     return { elements, index, panels, topSlide };
 }
 
-export function useSlidePanels(name: string = 'slide-panel') {
+export function useSlidePanels(name: string = defaultContainerName) {
     const registry = containers[name];
 
     if(!registry) {
