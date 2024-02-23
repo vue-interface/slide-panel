@@ -1,3 +1,10 @@
+# [1.0.0-beta.13](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2024-02-23)
+
+
+### Bug Fixes
+
+* more issues with esc key ([4089f7f](https://github.com/vue-interface/slide-panel/commit/4089f7fd973c958abbcb16ae00bae6a175d847ba))
+
 # [1.0.0-beta.12](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2024-02-23)
 
 
