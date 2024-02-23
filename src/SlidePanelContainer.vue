@@ -64,7 +64,7 @@ onMounted(() => {
                 [&>div]:absolute [&>div]:h-full [&>div]:top-0
             "
             :class="{
-                '[&>div]:rounded-tl-xl [&>div]:rounded-bl-xl [&>div]:right-0 [&>.v-enter-from]:translate-x-full [&>.v-leave-to]:translate-x-full [&>.v-enter-from]:ease-out [&>.v-leave-to]:ease-in': align === 'right',
+                '[&>div]:rounded-tl-xl [&>div]:rounded-bl-xl [&>div]:right-0 [&>div]:border-r-none [&>.v-enter-from]:translate-x-full [&>.v-leave-to]:translate-x-full [&>.v-enter-from]:ease-out [&>.v-leave-to]:ease-in': align === 'right',
                 '[&>div]:rounded-tr-xl [&>div]:rounded-br-xl [&>div]:left-0': align === 'left'
             }" />
     </Teleport>

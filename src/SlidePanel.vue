@@ -92,10 +92,10 @@ watchEffect(() => {
             <div
                 v-if="isOpen"
                 ref="el"
-                class="shadow-xl min-w-[6rem] border border-gray-200 bg-gray-50 duration-500"
+                class="shadow-xl min-w-[6rem] border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 duration-500"
                 :class="{
                     'top-slide': isTopSlide,
-                    'bg-neutral-100 hover:bg-neutral-200 hover:border-neutral-300 hover:cursor-pointer': !isTopSlide
+                    'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 hover:border-neutral-300 hover:cursor-pointer': !isTopSlide
                 }"
                 v-bind="useAttrs()"
                 @click="!isTopSlide && onClickPanel()">
