@@ -1,18 +1,13 @@
-export default _sfc_main;
-declare namespace _sfc_main {
-    namespace components {
-        export { SlideDeck };
-        export { SlidePanel };
-    }
-    namespace props {
-        const options: ObjectConstructor;
-        const panels: ArrayConstructor;
-        const removePanel: FunctionConstructor;
-    }
-    namespace methods {
-        function getPanelChildren(panel: any): any;
-        function onAfterLeave(panel: any): void;
-    }
-}
-import SlideDeck from "./SlideDeck.vue";
-import SlidePanel from "./SlidePanel.vue";
+declare const _default: import("vue").DefineComponent<{
+    options: ObjectConstructor;
+    panels: ArrayConstructor;
+    removePanel: FunctionConstructor;
+}, any, any, {}, {
+    getPanelChildren(panel: any): any;
+    onAfterLeave(panel: any): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+    options: ObjectConstructor;
+    panels: ArrayConstructor;
+    removePanel: FunctionConstructor;
+}>>, {}, {}>;
+export default _default;

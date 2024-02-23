@@ -260,7 +260,33 @@ export default {
 
 <template>
     <div
-        class="slide-panel"
+        class="
+            slide-panel outline-none inline-flex transition-all ease-int duration-[250ms]
+            
+            [&_.slide-panel-backdrop]:absolute
+            [&_.slide-panel-backdrop]:w-full
+            [&_.slide-panel-backdrop]:h-full
+            [&_.slide-panel-backdrop]:top-0
+            [&_.slide-panel-backdrop]:left-0
+            [&_.slide-panel-backdrop]:opacity-50
+            [&_.slide-panel-backdrop]:bg-[rgb(255,255,255,.75)]
+
+            [&:not(.slide-top)_.slide-panel-content]:z-[-1]
+            [&:not(.slide-top)_.slide-panel-content]:hover:ease-out
+            [&:not(.slide-top):hover_.slide-panel-content:not(.slide-leave-active)]:cursor-pointer
+            [&:not(.slide-top):hover_.slide-panel-content:not(.slide-leave-active)]:bg-[rgb(252,252,252)]
+
+            [&.slide-panel_.slide-enter-active]:transition-transform
+            [&.slide-panel_.slide-leave-active]:transition-transform
+            [&.slide-panel_.slide-enter-active]:ease-out
+            [&.slide-panel_.slide-leave-active]:ease-in
+
+            [.slide-left_&_.slide-enter-active.slide-enter-from]:-translate-x-full
+            [.slide-left_&_.slide-leave-active.slide-leave-to]:-translate-x-full
+
+            [.slide-right_&_.slide-enter-active.slide-enter-from]:translate-x-full
+            [.slide-right_&_.slide-leave-active.slide-leave-to]:translate-x-full
+        "
         :style="styles"
         :class="classes"
         @mouseenter.self="onMouseenter"
@@ -276,18 +302,33 @@ export default {
             <div
                 v-if="isShowing"
                 ref="content"
-                class="slide-panel-content"
+                class="relative flex-grow bg-white duration-[333ms] p-4 z-[1] overflow-auto shadow-[0_0_.5rem_rgba(0,0,0,.35)]"
                 @click="onClick">
                 <div
                     ref="inner"
-                    class="slide-panel-content-inner">
+                    class="slide-panel-content-inner flex-grow">
                     <slot />
                 </div>
                 <div>
                     <a
                         ref="close"
                         href="#"
-                        class="slide-panel-close"
+                        class="
+                            slide-panel-close absolute top-2 inline-flex justify-center items-center text-center rounded-full text-2xl w-10 h-10 text-[#a6a6a6] outline-none no-underline
+                            
+                            [.slide-left_&]:left-1
+                            [.slide-right_&]:right-1
+
+                            [&_span]:leading-[1.5]
+                            [&_span]:translate-y-[-1px]
+
+                            [&:not(&>.slide-leave-active)]:hover:no-underline
+                            [&:not(&>.slide-leave-active)]:focus:no-underline
+                            [&:not(&>.slide-leave-active)]:hover:bg-[rgb(230,230,230)]
+                            [&:not(&>.slide-leave-active)]:focus:bg-[rgb(230,230,230)]
+
+                            [&:active]:bg-[rgb(220,220,220)]
+                            [&:active]:scale-95"
                         @click.prevent="close">
                         <span>&times;</span>
                     </a>
@@ -296,119 +337,3 @@ export default {
         </Transition>
     </div>
 </template>
-
-<style>
-.slide-panel {
-    outline: none;
-    display: inline-flex;
-    transition-property: all;
-    transition-timing-function: ease-in;
-    transition-duration: 250ms;
-}
-
-.slide-panel:not(.slide-top) .slide-panel-content {
-    z-index: -1;
-}
-
-.slide-panel:not(.slide-top):hover {
-    transition-timing-function: ease-out;
-}
-
-.slide-panel:not(.slide-top):hover .slide-panel-content:not(.slide-leave-active) {
-    cursor: pointer;
-    background: rgb(252, 252, 252);
-}
-
-.slide-panel .slide-panel-content {
-    padding: 1rem;
-    z-index: 1;
-    overflow: auto;
-    box-shadow: 0 0 .5rem rgba(0, 0, 0, .35);
-    position: relative;
-    flex-grow: 1;
-    background: white;
-    transition-duration: 333ms;
-}
-
-.slide-panel .slide-enter-active,
-.slide-panel .slide-leave-active {
-    transition-property: transform;
-}
-
-.slide-panel .slide-enter-active {
-    transition-timing-function: ease-out;
-}
-
-.slide-panel .slide-leave-active {
-    transition-timing-function: ease-in;
-}
-
-.slide-left .slide-panel .slide-enter-active.slide-enter-from,
-.slide-left .slide-panel .slide-leave-active.slide-leave-to{
-    transform: translateX(-100%);
-}
-
-.slide-right .slide-panel .slide-enter-active.slide-enter-from,
-.slide-right .slide-panel .slide-leave-active.slide-leave-to {
-    transform: translateX(100%);
-}
-
-.slide-panel .slide-panel-content-inner {
-    flex-grow: 1;
-}
-
-.slide-panel .slide-panel-backdrop {
-    opacity: 50;
-    background: rgba(255, 255, 255, .75);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
-
-.slide-panel .slide-panel-close {
-    position: absolute;
-    top: .5em;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 1000%;
-    font-size: 1.5rem;
-    width: 1.5em;
-    height: 1.5em;
-    color: #a6a6a6;
-    outline: none;
-}
-
-.slide-left .slide-panel .slide-panel-close {
-    left: .25rem;
-}
-
-.slide-right .slide-panel .slide-panel-close {
-    right: .25rem;
-}
-
-.slide-panel .slide-panel-close span {
-    line-height: 1.5;
-    transform: translateY(-1px);
-}
-
-.slide-panel .slide-panel-close:not(.slide-leave-active):hover,
-.slide-panel .slide-panel-close:not(.slide-leave-active):focus {
-    text-decoration: none;
-    background-color: rgb(230, 230, 230);
-}
-
-.slide-panel .slide-panel-close:active {
-    background-color: rgb(220, 220, 220);
-    transform: scale(.95);
-}
-
-@media(max-width: 1024px) {
-    .slide-panel .slide-panel-content {
-        width: 100% !important;
-    }
-}
-</style>

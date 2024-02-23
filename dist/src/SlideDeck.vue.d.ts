@@ -1,46 +1,38 @@
-declare const _sfc_main: import("vue").DefineComponent<{
-    align: {
-        type: StringConstructor;
-        default: string;
-        validator: (value: unknown) => boolean;
-    };
-    backdrop: BooleanConstructor;
-}, {
-    run: (fns: any, ...args: any[]) => any;
-    unit: (value: any, uom?: string) => any;
-    props: any;
-    display: import("vue").Ref<boolean>;
-    isBackdropShowing: import("vue").Ref<boolean>;
-    registry: {
-        zIndex: number;
-        panels: never[];
-        readonly topSlide: any;
-    };
-    classes: import("vue").ComputedRef<{
-        [x: string]: boolean;
-        'has-slide-top': boolean;
-    }>;
-    wrapperClasses: import("vue").ComputedRef<{
-        left: boolean;
-        right: boolean;
-    }>;
-    lastSlide: import("vue").ComputedRef<never>;
-    styles: import("vue").ComputedRef<{
-        display: string | undefined;
-        zIndex: number;
-    }>;
-    x: () => any;
-    y: () => any;
-    onClickBackdrop: () => void;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
-    align: {
-        type: StringConstructor;
-        default: string;
-        validator: (value: unknown) => boolean;
-    };
-    backdrop: BooleanConstructor;
-}>>, {
+declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
+    align?: "right" | "left";
+    backdrop?: boolean;
+}>, {
     align: string;
-    backdrop: boolean;
+}>, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<{
+    align?: "right" | "left";
+    backdrop?: boolean;
+}>, {
+    align: string;
+}>>>, {
+    align: "right" | "left";
+}, {}>, {
+    default?(_: {}): any;
 }>;
-export default _sfc_main;
+export default _default;
+type __VLS_NonUndefinedable<T> = T extends undefined ? never : T;
+type __VLS_TypePropsToRuntimeProps<T> = {
+    [K in keyof T]-?: {} extends Pick<T, K> ? {
+        type: import('vue').PropType<__VLS_NonUndefinedable<T[K]>>;
+    } : {
+        type: import('vue').PropType<T[K]>;
+        required: true;
+    };
+};
+type __VLS_WithDefaults<P, D> = {
+    [K in keyof Pick<P, keyof P>]: K extends keyof D ? __VLS_Prettify<P[K] & {
+        default: D[K];
+    }> : P[K];
+};
+type __VLS_Prettify<T> = {
+    [K in keyof T]: T[K];
+} & {};
+type __VLS_WithTemplateSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

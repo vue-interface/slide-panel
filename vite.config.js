@@ -2,7 +2,6 @@ import vue from '@vitejs/plugin-vue';
 import { pascalCase } from 'change-case';
 import path from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
 import pkg from './package.json';
 
 const fileName = pkg.name.split('/')[1];
@@ -12,14 +11,9 @@ const external = [
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [])
 ];
 
-export default defineConfig({
-    // optimizeDeps: {
-    //     exclude: [
-    //         '@vue-interface/activity-indicator',
-    //         '@vue-interface/form-control'
-    //     ]
-    // },
+export default ({ command }) => defineConfig({
     build: {
+        sourcemap: command === 'build',
         lib: {
             entry: path.resolve(__dirname, 'index.ts'),
             name: pascalCase(fileName),
@@ -37,13 +31,11 @@ export default defineConfig({
         },
         watch: !process.env.NODE_ENV && {
             include: [
-                './tailwindcss.js',
                 './tailwindcss/**/*.js'
             ]
         }
     },
     plugins: [
-        vue(),
-        dts()
+        vue()
     ],
 });

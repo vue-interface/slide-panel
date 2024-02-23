@@ -1,29 +1,18 @@
 <script lang="ts" setup>
-import { ref, reactive, watch, computed, onMounted, provide } from 'vue';
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue';
 
 function run(fns, ...args) {
     return fns.reduce((p, fn) => p.then(() => fn(...args)), Promise.resolve());
-};
-
-function unit(value, uom = 'px') {
-    return value !== null
-        && value !== undefined
-        && value !== false
-        && isFinite(value) ? `${value}${uom}` : value;
 }
 
-const props = defineProps({
-    align: {
-        type: String,
-        default: 'right',
-        validator: value => ['left', 'right'].indexOf(value) > -1
-    },
-    backdrop: Boolean
+const props = withDefaults(defineProps<{
+    align?: 'right' | 'left',
+    backdrop?: boolean
+}>(), {
+    align: 'right'
 });
 
 const display = ref(false);
-
-const isBackdropShowing = ref(false);
 
 const registry = reactive({
     zIndex: 0,
@@ -64,7 +53,7 @@ watch(() => registry.zIndex, value => {
 
 onMounted(() => {
     window.addEventListener('keyup', ({ code }) => {
-        if(code === 'Escape' && registry.panels.length) {
+        if (code === 'Escape' && registry.panels.length) {
             registry.panels[registry.panels.length - 1].close();
         }
     });
@@ -83,10 +72,10 @@ function onClickBackdrop() {
         .reverse()
         .map((slide, i) => () => new Promise(resolve => {
             slide.close(value => {
-                if(value !== false) {
+                if (value !== false) {
                     setTimeout(() => {
                         resolve(value);
-                    },  Math.max(100, slide.duration / (registry.panels.length - i)));
+                    }, Math.max(100, slide.duration / (registry.panels.length - i)));
                 }
 
                 return value;
@@ -102,96 +91,39 @@ provide('registry', registry);
 
 <template>
     <div
-        class="slide-deck-panel-wrapper"
-        :style="{display: !display ? 'none' : undefined}"
-        :class="wrapperClasses">
+        class="slide-deck-panel-wrapper fixed top-0 h-full max-w-full z-[100] [&.right]:right-0 [&.left]:left-0"
+        :class="wrapperClasses"
+        :style="{ display: !display ? 'none' : undefined }">
         <div
             v-if="backdrop"
-            class="slide-deck-panel-backdrop"
+            class="slide-deck-panel-backdrop fixed top-0 right-0 h-full w-full opacity-100 bg-white/.75 transition-opacity duration-[2500ms] ease-in"
             @click="onClickBackdrop" />
-        <div
-            ref="panel"
-            class="slide-deck-panel"
-            :class="classes"
-            :style="styles">
+
+        <div ref="panel"
+            class="
+                slide-deck-panel relative top-0 h-full flex
+        
+                [&.slide-right]:right-0
+                [&.slide-right_.slide-panel-content]:flex-row
+                [&.slide-right_.slide-panel-content]:rouded-tl-lg
+                [&.slide-right_.slide-panel-content]:rouded-bl-lg
+                [&.slide-right_.slide-panel-content]:pr-11
+
+                [&.slide-left]:left-0
+                [&.slide-left_.slide-panel-content]:flex-row
+                [&.slide-left_.slide-panel-content]:rouded-tr-lg
+                [&.slide-left_.slide-panel-content]:rouded-br-lg
+                [&.slide-left_.slide-panel-content]:pl-11
+
+                [&.slide-deck-panel_.slide-panel]:relative
+                [&.slide-deck-panel_.slide-panel]:h-full
+                [&.slide-deck-panel_.slide-panel]:grow-0
+                [&.slide-deck-panel_.slide-panel]:shrink-0
+                
+                [&.slide-deck-panel.has-slide-top_.slide-panel:not(.slide-top)]:absolute
+            "
+            :class="classes" :style="styles">
             <slot />
         </div>
     </div>
 </template>
-
-<style>
-.slide-deck-panel-wrapper {
-    position: fixed;
-    top: 0;
-    height: 100%;
-    max-width: 100%;
-    z-index: 100;
-}
-
-.slide-deck-panel-wrapper.right {
-    right: 0;
-}
-
-.slide-deck-panel-wrapper.left {
-    left: 0;
-}
-
-.slide-deck-panel-backdrop {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 1;
-    background: rgba(255, 255, 255, .75);
-    transition: opacity 2500ms ease-in;
-}
-
-.slide-deck-panel {
-    position: relative;
-    top: 0;
-    height: 100%;
-    display: flex;
-    /* width: 300px; */
-    /* min-width: 33%;
-    max-width: 75%; */
-}
-
-.slide-deck-panel.slide-right {
-    right: 0;
-}
-
-.slide-deck-panel.slide-left {
-    left: 0;
-}
-
-.slide-deck-panel.slide-left .slide-panel-content {
-    flex-direction: row;
-    border-top-right-radius: .5rem;
-    border-bottom-right-radius: .5rem;
-    padding-left: 2.75rem;
-}
-
-.slide-deck-panel.slide-right {
-    right: 0;
-}
-
-.slide-deck-panel.slide-right .slide-panel-content {
-    flex-direction: row;
-    border-top-left-radius: .5rem;
-    border-bottom-left-radius: .5rem;
-    padding-right: 2.75rem;
-}
-
-.slide-deck-panel .slide-panel {
-    height: 100%;
-    flex-grow: 0;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.slide-deck-panel.has-slide-top .slide-panel:not(.slide-top) {
-    position: absolute;
-    /* right: 0; */
-}
-</style>
