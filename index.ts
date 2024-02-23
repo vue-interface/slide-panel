@@ -1,9 +1,9 @@
-import SlideDeck from './src/SlideDeck.vue';
 import SlidePanel from './src/SlidePanel.vue';
-import SlidePanelPlugin from './src/SlidePanelPlugin.js';
+import SlidePanelContainer from './src/SlidePanelContainer.vue';
+
+export * from './src/registry';
 
 export {
-    SlideDeck,
-    SlidePanel,
-    SlidePanelPlugin
+SlidePanel,
+SlidePanelContainer
 };
