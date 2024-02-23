@@ -1,3 +1,10 @@
+# [1.0.0-beta.11](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2024-02-23)
+
+
+### Bug Fixes
+
+* added dark mode support ([076bb12](https://github.com/vue-interface/slide-panel/commit/076bb120768c44283cb4a21e53eb71c2e02f9a95))
+
 # [1.0.0-beta.10](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2024-02-23)
 
 
