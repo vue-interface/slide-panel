@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { containers, createRegistry, defaultContainerName } from './registry';
 
 const props = withDefaults(defineProps<{
@@ -13,6 +13,27 @@ const props = withDefaults(defineProps<{
 const container = ref<HTMLDivElement>();
 
 const registry = createRegistry();
+
+let onEscCallback: (e: KeyboardEvent) => void;
+
+watch(registry.elements, () => {
+    if(!onEscCallback && registry.topSlide.value) {
+        window.addEventListener('keyup', onEscCallback = (e) => {
+            if(e.key === 'Escape' && registry.topSlide) {
+                for(const [, panel] of Object.entries(registry.panels.value)) {
+                    if(panel.isTopSlide) {
+                        panel.close();
+                    }
+                }
+            }
+        });
+    }
+    else if(onEscCallback && !registry.topSlide.value) {
+        window.removeEventListener('keyup', onEscCallback);
+    }
+}, {
+    deep: true
+});
 
 containers[props.name] = registry;
 

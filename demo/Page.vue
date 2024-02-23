@@ -3,6 +3,14 @@ import SlidePanel from '../src/SlidePanel.vue';
 import { useSlidePanels } from '../src/registry';
 
 const { open, close } = useSlidePanels();
+
+function onOpen() {
+    console.log('opened');
+}
+
+function onClose() {
+    console.log('closed');
+}
 </script>
 
 <template>
@@ -26,7 +34,9 @@ const { open, close } = useSlidePanels();
 
         <SlidePanel
             name="panel-1"
-            class="w-[25rem]">
+            class="w-[25rem]"
+            @open="onOpen"
+            @close="onClose">
             <template #default="{ close: test }">
                 <h1 class="text-2xl">
                     Slide Panel 1
