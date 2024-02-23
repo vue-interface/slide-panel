@@ -1,3 +1,10 @@
+# [1.0.0-beta.10](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2024-02-23)
+
+
+### Bug Fixes
+
+* added src to package.json files for JIT purposes ([a8a6640](https://github.com/vue-interface/slide-panel/commit/a8a66406a26025e1da5368b69b4d5a73e78dd52f))
+
 # [1.0.0-beta.9](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2024-02-23)
 
 
