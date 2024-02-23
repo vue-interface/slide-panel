@@ -14,9 +14,9 @@ const container = ref<HTMLDivElement>();
 
 const registry = createRegistry();
 
-let onEscCallback: (e: KeyboardEvent) => void;
+let onEscCallback: undefined|((e: KeyboardEvent) => void);
 
-watch(registry.elements, () => {
+watch(registry.topSlide, () => {
     if(!onEscCallback && registry.topSlide.value) {
         window.addEventListener('keyup', onEscCallback = (e) => {
             if(e.key === 'Escape' && registry.topSlide) {
@@ -30,9 +30,9 @@ watch(registry.elements, () => {
     }
     else if(onEscCallback && !registry.topSlide.value) {
         window.removeEventListener('keyup', onEscCallback);
+        
+        onEscCallback = undefined;
     }
-}, {
-    deep: true
 });
 
 containers[props.name] = registry;
