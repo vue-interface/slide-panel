@@ -92,17 +92,17 @@ watchEffect(() => {
             <div
                 v-if="isOpen"
                 ref="el"
-                class="shadow-xl min-w-[6rem] border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 duration-500"
+                class="shadow-xl min-w-[6rem] border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 duration-500 overflow-y-auto p-5"
                 :class="{
                     'top-slide': isTopSlide,
                     'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 hover:border-neutral-300 hover:cursor-pointer': !isTopSlide
                 }"
                 v-bind="useAttrs()"
                 @click="!isTopSlide && onClickPanel()">
-                <div class="relative p-5 pr-12">
-                    <SlidePanelClose
-                        class="absolute right-2 top-4"
-                        @click="close" />
+                <SlidePanelClose
+                    class="fixed right-2 top-4"
+                    @click="close" />
+                <div class="relative  pr-12">
                     <slot v-bind="{open, close}" />
                 </div>
             </div>
