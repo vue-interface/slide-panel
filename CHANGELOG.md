@@ -1,3 +1,10 @@
+# [1.0.0-beta.14](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2024-02-29)
+
+
+### Bug Fixes
+
+* issue with vertical content not overflowing properly ([a8014fa](https://github.com/vue-interface/slide-panel/commit/a8014facdad0a14f9409ce4c542abf2b988fbfd8))
+
 # [1.0.0-beta.13](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2024-02-23)
 
 
