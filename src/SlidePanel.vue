@@ -100,7 +100,7 @@ watchEffect(() => {
                 v-bind="useAttrs()"
                 @click="!isTopSlide && onClickPanel()">
                 <SlidePanelClose
-                    class="fixed right-2 top-4"
+                    class="fixed right-2 top-4 z-10"
                     @click="close" />
                 <div class="relative  pr-12">
                     <slot v-bind="{open, close}" />
