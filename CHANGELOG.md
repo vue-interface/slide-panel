@@ -1,3 +1,10 @@
+# [1.0.0-beta.15](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2024-03-04)
+
+
+### Bug Fixes
+
+* z-index issue on close button ([61d36bf](https://github.com/vue-interface/slide-panel/commit/61d36bf262f7678bd0e5aae71b94e2716cab382d))
+
 # [1.0.0-beta.14](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2024-02-29)
 
 
