@@ -1,3 +1,10 @@
+# [1.0.0-beta.16](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.15...v1.0.0-beta.16) (2024-03-05)
+
+
+### Bug Fixes
+
+* attemping to fix overflow issue ([b2ccac8](https://github.com/vue-interface/slide-panel/commit/b2ccac84303bb74ac4171b7b24fb810f3ec16a03))
+
 # [1.0.0-beta.15](https://github.com/vue-interface/slide-panel/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2024-03-04)
 
 
