@@ -92,7 +92,7 @@ watchEffect(() => {
             <div
                 v-if="isOpen"
                 ref="el"
-                class="shadow-xl min-w-[6rem] border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 duration-500 overflow-y-auto p-5"
+                class="shadow-xl min-w-[6rem] border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 duration-500 overflow-auto p-5"
                 :class="{
                     'top-slide': isTopSlide,
                     'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 hover:border-neutral-300 hover:cursor-pointer': !isTopSlide
